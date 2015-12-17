@@ -1,0 +1,81 @@
+14.12.2015 12:14:58: COM2 : adress: 1: Factory number: 01435190
+14.12.2015 12:53:58: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 12:53:58: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 12:53:58: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 12:53:58: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 12:53:58: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 12:53:58: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 12:54:01: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 12:54:01: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 12:54:01: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 12:54:01: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 12:54:01: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 12:54:01: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 12:54:04: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 12:54:04: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 12:54:04: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 12:54:04: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 12:54:04: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 12:54:04: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 12:54:06: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 12:54:06: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 12:54:06: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 12:54:06: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 12:54:06: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 12:54:06: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 12:54:09: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 12:54:09: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 12:54:09: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 12:54:09: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 12:54:09: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 12:54:09: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 12:54:12: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 12:54:12: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 12:54:12: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 12:54:12: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 12:54:12: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 12:54:12: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 12:54:17: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 12:54:17: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 12:54:17: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 12:54:17: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 12:54:17: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 12:54:17: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 12:54:19: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 12:54:19: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 12:54:19: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 12:54:19: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 12:54:19: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 12:54:19: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 13:29:39: COM2 : adress: 1: case1: ReadArchiveValCountId
+14.12.2015 13:29:41: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 13:29:41: COM2 : adress: 1: ReadDailyValues: на указанную дату записей не обнаружено: 14.12.2015
+14.12.2015 13:29:59: COM2 : adress: 1: data_arr.length = 66
+14.12.2015 13:29:59: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 13:29:59: COM2 : adress: 1: avp.toStr = id: 619, datetime: 13.12.2015 14:05:00, energy(Gcal): 0,005, volume(m3): 0,227; timeOn: 7509, timeOnErr: 61
+14.12.2015 13:30:10: COM2 : adress: 1: case1: ReadArchiveValCountId
+14.12.2015 13:30:12: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 13:30:12: COM2 : adress: 1: ReadDailyValues: на указанную дату записей не обнаружено: 14.12.2015
+14.12.2015 13:30:17: COM2 : adress: 1: case1: ReadArchiveValCountId
+14.12.2015 13:30:19: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 13:30:19: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 13:30:19: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 13:30:19: COM2 : adress: 1: ReadDailyValues: requiredDt: 13.12.2015
+14.12.2015 13:30:25: COM2 : adress: 1: case1: ReadArchiveValCountId
+14.12.2015 13:30:27: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 13:30:27: COM2 : adress: 1: ReadDailyValues: lastRecDt: 13.12.2015
+14.12.2015 13:30:27: COM2 : adress: 1: ReadDailyValues: lastId: 619
+14.12.2015 13:30:27: COM2 : adress: 1: ReadDailyValues: requiredDt: 12.12.2015
+14.12.2015 13:30:27: COM2 : adress: 1: ReadDailyValues: requiredId: 618
+14.12.2015 13:30:29: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 14:32:49: COM2 : adress: 1: case1: ReadArchiveValCountId
+14.12.2015 14:32:51: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 14:32:51: COM2 : adress: 1: ReadDailyValues: lastRecDt: 14.12.2015
+14.12.2015 14:32:51: COM2 : adress: 1: ReadDailyValues: lastId: 620
+14.12.2015 14:32:51: COM2 : adress: 1: ReadDailyValues: requiredDt: 14.12.2015
+14.12.2015 14:33:05: COM2 : adress: 1: case1: ReadArchiveValCountId
+14.12.2015 14:33:08: Unknown port: adress: 0: ArchiveValueParser - constructor start
+14.12.2015 14:33:08: COM2 : adress: 1: ReadDailyValues: lastRecDt: 14.12.2015
+14.12.2015 14:33:08: COM2 : adress: 1: ReadDailyValues: lastId: 620
+14.12.2015 14:33:08: COM2 : adress: 1: ReadDailyValues: requiredDt: 14.12.2015
+14.12.2015 14:34:53: COM2 : adress: 1: Energy GCal: 5,7523
