@@ -48,6 +48,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.reqUd2_btn = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.addressDecCmb = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.portSettingsApplyBtn = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -92,7 +95,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(977, 29);
+            this.menuStrip1.Size = new System.Drawing.Size(993, 29);
             this.menuStrip1.TabIndex = 23;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -180,7 +183,7 @@
             this.groupBox1.Controls.Add(this.numericUpDown1);
             this.groupBox1.Location = new System.Drawing.Point(581, 386);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(386, 71);
+            this.groupBox1.Size = new System.Drawing.Size(399, 71);
             this.groupBox1.TabIndex = 31;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Архив записей (РТ протокол)";
@@ -240,7 +243,7 @@
             this.groupBox2.Controls.Add(this.reqUd2_btn);
             this.groupBox2.Location = new System.Drawing.Point(581, 308);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(386, 72);
+            this.groupBox2.Size = new System.Drawing.Size(399, 72);
             this.groupBox2.TabIndex = 32;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "MBUS";
@@ -257,6 +260,9 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label7);
+            this.groupBox3.Controls.Add(this.addressDecCmb);
+            this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Controls.Add(this.portSettingsApplyBtn);
             this.groupBox3.Controls.Add(this.panel2);
             this.groupBox3.Controls.Add(this.panel1);
@@ -266,18 +272,45 @@
             this.groupBox3.Controls.Add(this.addressCmbBox);
             this.groupBox3.Location = new System.Drawing.Point(581, 32);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(386, 270);
+            this.groupBox3.Size = new System.Drawing.Size(399, 270);
             this.groupBox3.TabIndex = 33;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Параметры соединения";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(248, 205);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(35, 20);
+            this.label7.TabIndex = 38;
+            this.label7.Text = "dec";
+            // 
+            // addressDecCmb
+            // 
+            this.addressDecCmb.FormattingEnabled = true;
+            this.addressDecCmb.Location = new System.Drawing.Point(233, 228);
+            this.addressDecCmb.Name = "addressDecCmb";
+            this.addressDecCmb.Size = new System.Drawing.Size(85, 28);
+            this.addressDecCmb.TabIndex = 37;
+            this.addressDecCmb.TextChanged += new System.EventHandler(this.addressDecCmb_TextChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(161, 205);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(34, 20);
+            this.label6.TabIndex = 36;
+            this.label6.Text = "hex";
+            // 
             // portSettingsApplyBtn
             // 
-            this.portSettingsApplyBtn.Location = new System.Drawing.Point(262, 214);
+            this.portSettingsApplyBtn.Location = new System.Drawing.Point(327, 224);
             this.portSettingsApplyBtn.Name = "portSettingsApplyBtn";
-            this.portSettingsApplyBtn.Size = new System.Drawing.Size(105, 34);
+            this.portSettingsApplyBtn.Size = new System.Drawing.Size(53, 34);
             this.portSettingsApplyBtn.TabIndex = 35;
-            this.portSettingsApplyBtn.Text = "Применить";
+            this.portSettingsApplyBtn.Text = "OK";
             this.portSettingsApplyBtn.UseVisualStyleBackColor = true;
             this.portSettingsApplyBtn.Click += new System.EventHandler(this.portSettingsApplyBtn_Click);
             // 
@@ -286,16 +319,17 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.textBox2);
             this.panel2.Controls.Add(this.textBox1);
+            this.panel2.Enabled = false;
             this.panel2.Location = new System.Drawing.Point(35, 144);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(332, 50);
+            this.panel2.Size = new System.Drawing.Size(345, 50);
             this.panel2.TabIndex = 34;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(237, 12);
+            this.textBox2.Location = new System.Drawing.Point(246, 12);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(81, 26);
+            this.textBox2.Size = new System.Drawing.Size(92, 26);
             this.textBox2.TabIndex = 1;
             this.textBox2.Text = "5002";
             // 
@@ -314,12 +348,12 @@
             this.panel1.Controls.Add(this.portCmbBox);
             this.panel1.Location = new System.Drawing.Point(37, 55);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(332, 50);
+            this.panel1.Size = new System.Drawing.Size(343, 50);
             this.panel1.TabIndex = 33;
             // 
             // numericUpDown4
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(224, 11);
+            this.numericUpDown4.Location = new System.Drawing.Point(244, 11);
             this.numericUpDown4.Maximum = new decimal(new int[] {
             3000,
             0,
@@ -335,7 +369,7 @@
             this.numericUpDown4.TabIndex = 31;
             this.toolTip1.SetToolTip(this.numericUpDown4, "Задержка чтения (Read Timeout)");
             this.numericUpDown4.Value = new decimal(new int[] {
-            2000,
+            1600,
             0,
             0,
             0});
@@ -347,11 +381,11 @@
             this.portCmbBox.Name = "portCmbBox";
             this.portCmbBox.Size = new System.Drawing.Size(124, 28);
             this.portCmbBox.TabIndex = 30;
-            this.portCmbBox.SelectedIndexChanged += new System.EventHandler(this.portCmbBox_SelectedIndexChanged);
             // 
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
+            this.radioButton2.Enabled = false;
             this.radioButton2.Location = new System.Drawing.Point(10, 114);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(82, 24);
@@ -376,7 +410,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 221);
+            this.label3.Location = new System.Drawing.Point(8, 231);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(128, 20);
             this.label3.TabIndex = 30;
@@ -385,11 +419,11 @@
             // addressCmbBox
             // 
             this.addressCmbBox.FormattingEnabled = true;
-            this.addressCmbBox.Location = new System.Drawing.Point(142, 218);
+            this.addressCmbBox.Location = new System.Drawing.Point(142, 228);
             this.addressCmbBox.Name = "addressCmbBox";
             this.addressCmbBox.Size = new System.Drawing.Size(85, 28);
             this.addressCmbBox.TabIndex = 29;
-            this.addressCmbBox.SelectedIndexChanged += new System.EventHandler(this.addressCmbBox_SelectedIndexChanged);
+            this.addressCmbBox.TextChanged += new System.EventHandler(this.addressCmbBox_TextChanged);
             // 
             // groupBox4
             // 
@@ -403,7 +437,7 @@
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Location = new System.Drawing.Point(581, 463);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(386, 107);
+            this.groupBox4.Size = new System.Drawing.Size(399, 107);
             this.groupBox4.TabIndex = 32;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Тест функций СО";
@@ -495,7 +529,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(977, 582);
+            this.ClientSize = new System.Drawing.Size(993, 582);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -510,6 +544,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "ElfApator - тестовая утилита";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -575,6 +610,9 @@
         private System.Windows.Forms.NumericUpDown numericUpDown4;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button readCurBtn;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox addressDecCmb;
+        private System.Windows.Forms.Label label6;
     }
 }
 

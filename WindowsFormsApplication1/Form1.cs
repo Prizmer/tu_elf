@@ -30,10 +30,15 @@ namespace WindowsFormsApplication1
             for (int i = 1; i < 256; i++)
                 addrLst.Add(Convert.ToString(i, 16));
 
+            List<string> addrLstDec = new List<string>(256);
+            for (int i = 1; i < 256; i++)
+                addrLstDec.Add(Convert.ToString(i, 10));
+
             string[] avaluablePorts = SerialPort.GetPortNames();
             portCmbBox.Items.AddRange(avaluablePorts);
 
             addressCmbBox.Items.AddRange(addrLst.ToArray());
+            addressDecCmb.Items.AddRange(addrLstDec.ToArray());
 
             //экземпляр драйвера
             Meter = new elf108();
@@ -70,7 +75,11 @@ namespace WindowsFormsApplication1
             m_Port.DtrEnable = true;
             m_Port.RtsEnable = true;
              * */
-
+            if (vp != null)
+            {
+                vp.closePort();
+                vp = null;
+            }
             vp = new ComPort(byte.Parse(portName.Remove(0, 3)), 2400, 8, 2, 1, 0, (ushort)numericUpDown4.Value, 1);
         }
 
@@ -111,16 +120,6 @@ namespace WindowsFormsApplication1
             {
                 addMessageToScreen("Не удалось прочитать серийный номер");
             }
-        }
-
-        private void addressCmbBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //initAddr(addressCmbBox.SelectedItem.ToString());
-        }
-
-        private void portCmbBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //initPort(portCmbBox.SelectedItem.ToString());
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -165,7 +164,6 @@ namespace WindowsFormsApplication1
 
             initAddr(addressCmbBox.SelectedItem.ToString());
             Meter.Init(m_addr, String.Empty, vp);
-
 
 
             clearScreen();
@@ -324,7 +322,63 @@ namespace WindowsFormsApplication1
             addMessageToScreen("*** Текущие ***");
             addMessageToScreen("Значение: ");
             addMessageToScreen(val.ToString());
-        } 
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (vp != null)
+            {
+                vp.closePort();
+            }
+        }
+
+
+        private void addressCmbBox_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                int val = Convert.ToInt32(addressCmbBox.Text, 16);
+                var ind = addressCmbBox.Items.IndexOf(addressCmbBox.Text);
+                if (ind == -1)
+                {
+                    addressCmbBox.SelectedIndex = addressDecCmb.SelectedIndex;
+                    return;
+                }
+                addressCmbBox.SelectedIndex = ind;
+                addressDecCmb.SelectedIndex = addressCmbBox.SelectedIndex;
+
+                addressDecCmb.Select(addressDecCmb.Text.Length, 0);
+                addressCmbBox.Select(addressDecCmb.Text.Length, 0);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+        private void addressDecCmb_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                int val = Convert.ToInt32(addressDecCmb.Text, 10);
+                var ind = addressDecCmb.Items.IndexOf(addressDecCmb.Text);
+                if (ind == -1)
+                {
+                    addressDecCmb.SelectedIndex = addressCmbBox.SelectedIndex;
+                    return;
+                }
+                addressDecCmb.SelectedIndex = ind;
+                addressCmbBox.SelectedIndex = addressDecCmb.SelectedIndex;
+                addressDecCmb.Select(addressDecCmb.Text.Length, 0);
+                addressCmbBox.Select(addressDecCmb.Text.Length, 0);
+                
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
 
 
 

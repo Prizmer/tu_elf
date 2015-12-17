@@ -16,6 +16,7 @@ namespace Prizmer.Ports
     {
         int WriteReadData(FindPacketSignature func, byte[] out_buffer, ref byte[] in_buffer, int out_length, int target_in_length, uint pos_count_data_size = 0, uint size_data = 0, uint header_size = 0);
         string GetName();
+        void closePort();
         /*void Write(byte[] m_cmd, int leng);
         int Read(ref byte[] data);*/
     }
@@ -32,6 +33,8 @@ namespace Prizmer.Ports
         {
             return "tcp" + m_address + "_" + m_port;
         }
+        
+
 
         public TcpipPort(string address, int port, ushort write_timeout, ushort read_timeout, int delay_between_sending)
         {
@@ -40,6 +43,11 @@ namespace Prizmer.Ports
             m_write_timeout = write_timeout;
             m_read_timeout = read_timeout;
             m_delay_between_sending = delay_between_sending;
+        }
+
+        public void closePort()
+        {
+           
         }
 
         public void Write(byte[] m_cmd, int leng)
@@ -188,6 +196,12 @@ namespace Prizmer.Ports
         public string GetName()
         {
             return m_name + " ";
+        }
+
+        public void closePort()
+        {
+            if (m_Port != null && m_Port.IsOpen)
+                m_Port.Close();
         }
 
         public ComPort(byte number, int baudrate, byte data_bits, byte parity, byte stop_bits, ushort write_timeout, ushort read_timeout, byte attemts)

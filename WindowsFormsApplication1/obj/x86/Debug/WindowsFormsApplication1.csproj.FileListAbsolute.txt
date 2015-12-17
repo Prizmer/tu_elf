@@ -32,3 +32,11 @@ C:\Users\ikhromov\Desktop\PI\1_Projects\0_Drivers\ApatorElf108\elf_dev\elfTestUt
 C:\Users\ikhromov\Desktop\PI\1_Projects\0_Drivers\ApatorElf108\elf_dev\elfTestUtility\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.HelpUtilsForm.resources
 C:\Users\ikhromov\Desktop\PI\1_Projects\0_Drivers\ApatorElf108\elf_dev\elfTestUtility\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
 C:\Users\ikhromov\Desktop\PI\1_Projects\0_Drivers\ApatorElf108\elf_dev\elfTestUtility\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+D:\PI_Projects\TestUtils\ElfTestUtil\WindowsFormsApplication1\bin\Debug\PI_testutil_elf.exe
+D:\PI_Projects\TestUtils\ElfTestUtil\WindowsFormsApplication1\bin\Debug\PI_testutil_elf.pdb
+D:\PI_Projects\TestUtils\ElfTestUtil\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+D:\PI_Projects\TestUtils\ElfTestUtil\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.HelpUtilsForm.resources
+D:\PI_Projects\TestUtils\ElfTestUtil\WindowsFormsApplication1\obj\x86\Debug\TestUtilElf.Properties.Resources.resources
+D:\PI_Projects\TestUtils\ElfTestUtil\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+D:\PI_Projects\TestUtils\ElfTestUtil\WindowsFormsApplication1\obj\x86\Debug\PI_testutil_elf.exe
+D:\PI_Projects\TestUtils\ElfTestUtil\WindowsFormsApplication1\obj\x86\Debug\PI_testutil_elf.pdb

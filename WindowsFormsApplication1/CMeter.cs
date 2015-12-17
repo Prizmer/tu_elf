@@ -41,7 +41,7 @@ namespace Prizmer.Meters
                 FileStream fs = null;
                 try
                 {
-                    fs = new FileStream(@"elfApatorLog.log", FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                    fs = new FileStream(@"elflog.log", FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
                     sw = new StreamWriter(fs, Encoding.Default);
                     if (m_vport == null) sw.WriteLine(DateTime.Now.ToString() + ": Unknown port: adress: " + m_address + ": " + str);
                     else sw.WriteLine(DateTime.Now.ToString() + ": " + m_vport.GetName() + ": adress: " + m_address + ": " + str);
