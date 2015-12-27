@@ -71,30 +71,49 @@ namespace WindowsFormsApplication1
 
         public bool SendREQ_UD2(ref byte[] data_arr)
         {
+            WriteToLog("SendREQ_UD2 START");
             /*данные проходящие по протоколу m-bus не нужно шифровать, а также не нужно
              применять отрицание для зарезервированных символов*/
             byte cmd = 0x7b;
             byte CS = (byte)(cmd + m_addr);
 
-            byte[] cmdArr = { 0x10, cmd, m_addr, CS, 0x16 };
-            byte[] inp = new byte[REQ_UD2_ANSW_SIZE];
+            byte[] cmdArr = { 0x10, cmd, m_addr, CS, 0x16};
+            byte[] inp = new byte[256];
 
             try
             {
-                byte[] data = new byte[97];
-                m_vport.WriteReadData(findPackageSign, cmdArr, ref inp, cmdArr.Length, inp.Length);
-                if (inp[0] == 0x10 && inp[inp.Length - 1] == 0x16)
+                //режим, когда незнаем сколько байт нужно принять
+                m_vport.WriteReadData(findPackageSign, cmdArr, ref inp, cmdArr.Length, -1);
+
+                string msg = String.Format("SendREQ_UD2: принято inp.length: {0} байт;", inp.Length);
+                WriteToLog(msg);
+
+                
+                string answ_str = "";
+                foreach (byte b in inp)
+                    answ_str += Convert.ToString(b, 16) + " ";
+                WriteToLog(answ_str);
+
+                int lastDataByteIndex = 0;
+                for (int i = inp.Length - 1; i >= 0; i--)
+                    if (inp[i] == 0x16)
+                    {
+                        lastDataByteIndex = i - 2;
+                        break;
+                    }
+
+                if (lastDataByteIndex == 0)
                 {
-                    Array.Copy(inp, REQ_UD2_HEADER_SIZE, data, 0, REQ_UD2_DATA_SIZE);
-                    //WriteToLog(BitConverter.ToString(data));
-                    data_arr = data;
-                    return true;
-                }
-                else
-                {
-                    WriteToLog("SendREQ_UD2: принятые данные некорректны");
+                    WriteToLog("SendREQ_UD2: не найден байт окончания ответа 0x16");
                     return false;
                 }
+
+                int data_length = REQ_UD2_HEADER_SIZE - lastDataByteIndex + 1;
+                byte[] data = new byte[data_length];
+                Array.Copy(inp, REQ_UD2_HEADER_SIZE, data, 0, data.Length);
+                //WriteToLog(BitConverter.ToString(data));
+                data_arr = data;
+                return true;
             }
             catch (Exception ex)
             {

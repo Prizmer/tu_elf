@@ -44,7 +44,7 @@ namespace WindowsFormsApplication1
             Meter = new elf108();
 
             portCmbBox.SelectedIndex = 0;
-            addressCmbBox.SelectedIndex = 0;
+            addressCmbBox.SelectedIndex = 128;
             radioButton1.Checked = true;
 
             clearScreen();
