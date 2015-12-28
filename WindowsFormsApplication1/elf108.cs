@@ -107,8 +107,8 @@ namespace WindowsFormsApplication1
                     WriteToLog("SendREQ_UD2: не найден байт окончания ответа 0x16");
                     return false;
                 }
-
-                int data_length = REQ_UD2_HEADER_SIZE - lastDataByteIndex + 1;
+                 
+                int data_length = lastDataByteIndex - REQ_UD2_HEADER_SIZE + 1;
                 byte[] data = new byte[data_length];
                 Array.Copy(inp, REQ_UD2_HEADER_SIZE, data, 0, data.Length);
                 //WriteToLog(BitConverter.ToString(data));
