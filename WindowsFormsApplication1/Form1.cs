@@ -431,19 +431,18 @@ namespace WindowsFormsApplication1
                 //return;
             }
 
-            addMessageToScreen("Энергия, объем, время работы, работа с ошибкой, Твхода");
             addMessageToScreen();
-
-            for (int i = 1; i <= 5; i++)
+            foreach (elf108.Params p in Enum.GetValues(typeof(elf108.Params)))
             {
-                float tmp = -1f;
-                if (Meter.ReadCurrentValues((ushort)i, 0, ref tmp))
-                    resStr += tmp.ToString() + "; ";
-                else
-                    resStr += "false; ";
-            }
+                float val = -1f;
+                string res = "false;";
 
-            addMessageToScreen(resStr);
+                if (Meter.getRecordValueByParam(p, out val))
+                    res = val.ToString();
+
+                string res_str = String.Format("{0}: {1}", p.ToString(), val);
+                addMessageToScreen(res_str);
+            }
         }
 
     }

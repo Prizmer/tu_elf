@@ -243,7 +243,10 @@ namespace WindowsFormsApplication1
                     }
                 case Params.ENERGY:
                     {
+                        //коэффициент, согласно документации MBUS, после применения дает значение в KCal
                         COEFFICIENT = 10;
+                        //однако, согласно документации elf, требуется представить в GCal
+                        COEFFICIENT *= (int)Math.Pow(10, 6);
                         break;
                     }
                 case Params.VOLUME:
@@ -285,6 +288,30 @@ namespace WindowsFormsApplication1
             {
                 value /= COEFFICIENT;
                 return true;
+            }
+        }
+
+        public bool getRecordValueByParam(Params param, out float value)
+        {
+            List<Record> records = new List<Record>();
+            value = 0f;
+
+            if (!GetRecordsList(out records))
+            {
+                WriteToLog("getRecordValueByParam: can't split records");
+                return false;
+            }
+
+            float res_val = 0f;
+            if (getRecordValueByParam(param, records, out res_val))
+            {
+                value = res_val;
+                return true;
+            }
+            else
+            {
+                WriteToLog("getRecordValueByParam: can't getRecordValueByParam: " + Params.FACTORY_NUMBER.ToString());
+                return false;
             }
         }
 
