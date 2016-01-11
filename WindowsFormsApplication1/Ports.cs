@@ -535,6 +535,8 @@ namespace Prizmer.Ports
                             for (int i = 0; i < in_buffer.Length; i++)
                                 in_buffer[i] = temp_buffer[i];
 
+
+
                             return reading_size;
                         }
 

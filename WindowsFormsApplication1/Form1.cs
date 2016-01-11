@@ -44,7 +44,7 @@ namespace WindowsFormsApplication1
             Meter = new elf108();
 
             portCmbBox.SelectedIndex = 0;
-            addressCmbBox.SelectedIndex = 128;
+            addressCmbBox.SelectedIndex = 0;
             radioButton1.Checked = true;
 
             clearScreen();
@@ -182,32 +182,9 @@ namespace WindowsFormsApplication1
             portInitialized = true;
         }
 
-        private void reqUd2_btn_Click(object sender, EventArgs e)
-        {
-            clearScreen();
-
-            addMessageToScreen("*** Параметры по MBUS ***");
-            addMessageToScreen("Последовательно: энергия, объем, время работы, ошибка, температура");
-            addMessageToScreen();
-
-            string resStr = "";
-
-            for (int i = 1; i <= 5; i++)
-            {
-                float tmp = -1f;
-                if (Meter.ReadCurrentValues((ushort)i, 0, ref tmp))
-                    resStr += tmp.ToString() + "; ";
-                else
-                    resStr += "false; ";
-            }
-
-            addMessageToScreen(resStr);
-        }
-
         private void byIdBtn_Click(object sender, EventArgs e)
         {
             
-
             uint recIndex = (uint)numericUpDown1.Value;
             clearScreen();
 
@@ -292,6 +269,7 @@ namespace WindowsFormsApplication1
                 {
                     groupBox2.Enabled = true;
                     groupBox1.Enabled = true;
+                    groupBox4.Enabled = true;
                     apatorBtn.Enabled = true;
                 }
                 else
@@ -299,8 +277,7 @@ namespace WindowsFormsApplication1
                     groupBox2.Enabled = false;
                     groupBox1.Enabled = false;
                     apatorBtn.Enabled = false;
-
-                }
+                    groupBox4.Enabled = false;                }
             }
         }
 
@@ -380,7 +357,94 @@ namespace WindowsFormsApplication1
             }
         }
 
+        //Тест связи
+        private void button1_Click(object sender, EventArgs e)
+        {
+            clearScreen();
+            addMessageToScreen("*** Тест связм ***");
 
+            if (!Meter.OpenLinkCanal())
+            {
+                addMessageToScreen("*** Не выполнен ***");
+            }
+            else
+            {
+                addMessageToScreen("*** ВЫПОЛНЕН ***");
+            }
+        }
+        
+        //Серийник
+        private void button2_Click(object sender, EventArgs e)
+        {
+            clearScreen();
+            addMessageToScreen("*** Серийный номер ***");
+
+            string serial_str = "";
+            if (!Meter.ReadSerialNumber(ref serial_str))
+            {
+                addMessageToScreen("*** Не считан ***");
+            }
+            else
+            {
+                addMessageToScreen(serial_str);
+            }
+        }
+
+        //Ответ rsp_ud
+        private void reqUd2_btn_Click(object sender, EventArgs e)
+        {
+            clearScreen();
+            addMessageToScreen("*** Байты rsp_ud ***");
+            string res_str = "Ошибка";
+
+            List<byte> bytes = new List<byte>();
+            if (Meter.SendREQ_UD2(out bytes))
+            {
+                addMessageToScreen("Команда: 5B");
+                addMessageToScreen("Н/Конец: 4 + 2 = 6B");
+                addMessageToScreen("C/A/CI: 3B");
+                addMessageToScreen("Заголовок FDH: 12B");
+                addMessageToScreen("");
+                addMessageToScreen("Длина блока данных (Б): " + bytes.Count);
+                addMessageToScreen("Длина сообщения (Б): " + (bytes.Count + 26));
+                addMessageToScreen("");
+
+                addMessageToScreen("Байты данных: ");
+                res_str = BitConverter.ToString(bytes.ToArray(), 0).Replace("-", " ");
+            }
+
+            addMessageToScreen(res_str);
+        }
+
+        //Все
+        private void button3_Click(object sender, EventArgs e)
+        {
+            clearScreen();
+
+            addMessageToScreen("*** Параметры по MBUS ***");
+
+            string resStr = "";
+
+            if (!Meter.OpenLinkCanal())
+            {
+                addMessageToScreen("Провал теста связи");
+                //return;
+            }
+
+            addMessageToScreen("Энергия, объем, время работы, работа с ошибкой, Твхода");
+            addMessageToScreen();
+
+            for (int i = 1; i <= 5; i++)
+            {
+                float tmp = -1f;
+                if (Meter.ReadCurrentValues((ushort)i, 0, ref tmp))
+                    resStr += tmp.ToString() + "; ";
+                else
+                    resStr += "false; ";
+            }
+
+            addMessageToScreen(resStr);
+        }
 
     }
 }

@@ -69,15 +69,349 @@ namespace WindowsFormsApplication1
         #endregion
 
 
-        public bool SendREQ_UD2(ref byte[] data_arr)
+        #region Протокол MBUS
+
+        public struct Record
         {
-            WriteToLog("SendREQ_UD2 START");
+            public byte DIF;
+            public List<byte> DIFEs;
+
+            public byte VIF;
+            public List<byte> VIFEs;
+
+            public List<byte> dataBytes;
+
+            public RecordDataType recordType;
+        }
+
+        public enum RecordDataType
+        {
+            NO_DATA = 0,
+            INTEGER = 1,
+            REAL = 2,
+            BCD = 3,
+            VARIABLE_LENGTH = 4,
+            SELECTION_FOR_READOUT = 5,
+            SPECIAL_FUNСTIONS = 6
+        }
+
+        //параметры в порядке как они идут в rsp_ud
+        public enum Params
+        {
+            FACTORY_NUMBER = 0,
+            DATE = 1,
+            ERR_CODE = 2,
+            ENERGY = 3, //ГКал
+            VOLUME = 4,
+            VOLUME_IMP1 = 5,
+            VOLUME_IMP2 = 6,
+            VOLUME_IMP3 = 7,
+            VOLUME_IMP4 = 8,
+            VOLUME_FLOW = 9,
+            POWER = 10,
+            TEMP_INP = 11,
+            TEMP_OUTP = 12,
+            TIME_ON = 13,
+            TIME_ON_ERR = 14
+        }
+
+        public int getLengthAndTypeFromDIF(byte DIF, out RecordDataType type)
+        {
+            int data = DIF & 0x0F; //00001111b
+            switch (data)
+            {
+                case 0:
+                    {
+                        type = RecordDataType.NO_DATA;
+                        return 0;
+                    }
+                case 1:
+                    {
+                        type = RecordDataType.INTEGER;
+                        return 1;
+                    }
+                case 2:
+                    {
+                        type = RecordDataType.INTEGER;
+                        return 2;
+                    }
+                case 3:
+                    {
+                        type = RecordDataType.INTEGER;
+                        return 3;
+                    }
+                case 4:
+                    {
+                        type = RecordDataType.INTEGER;
+                        return 4;
+                    }
+                case 5:
+                    {
+                        WriteToLog("getLengthAndTypeFromDIF: 5, real");
+                        type = RecordDataType.REAL;
+                        return 4;
+                    }
+                case 6:
+                    {
+                        type = RecordDataType.INTEGER;
+                        return 6;
+                    }
+                case 7:
+                    {
+                        type = RecordDataType.INTEGER;
+                        return 8;
+                    }
+                case 8:
+                    {
+                        //selection for readout
+                        WriteToLog("getLengthAndTypeFromDIF: 8, selection for readout");
+                        type = RecordDataType.SELECTION_FOR_READOUT;
+                        return 0;
+                    }
+                case 9:
+                    {
+                        type = RecordDataType.BCD;
+                        return 1;
+                    }
+                case 10:
+                    {
+                        type = RecordDataType.BCD;
+                        return 2;
+                    }
+                case 11:
+                    {
+                        type = RecordDataType.BCD;
+                        return 3;
+                    }
+                case 12:
+                    {
+                        type = RecordDataType.BCD;
+                        return 4;
+                    }
+                case 13:
+                    {
+                        WriteToLog("getLengthAndTypeFromDIF: 13, variable length");
+                        type = RecordDataType.VARIABLE_LENGTH;
+                        return -1;
+                    }
+                case 14:
+                    {
+                        type = RecordDataType.BCD;
+                        return 6;
+                    }
+                case 15:
+                    {
+                        WriteToLog("getLengthAndTypeFromDIF: 15, special functions");
+                        type = RecordDataType.SPECIAL_FUNСTIONS;
+                        return -1;
+                    }
+                default:
+                    {
+                        type = RecordDataType.NO_DATA;
+                        return -1;
+                    }
+            }
+        }
+
+        private bool getRecordValueByParam(Params param, List<Record> records, out float value)
+        {
+            if (records == null && records.Count == 0)
+            {
+                WriteToLog("getRecordValueByParam: список записей пуст");
+                value = 0f;
+                return false;
+            }
+
+            if ((int)param >= records.Count)
+            {
+                WriteToLog("getRecordValueByParam: параметра не существует в списке записей: " + param.ToString());
+                value = 0f;
+                return false;
+            }
+
+            Record record = records[(int)param];
+            byte[] data = record.dataBytes.ToArray();
+            Array.Reverse(data);
+            string hex_str = BitConverter.ToString(data).Replace("-", string.Empty);
+
+            int COEFFICIENT = 1;
+            switch (param)
+            {
+                case Params.FACTORY_NUMBER:
+                    {
+                        break;
+                    }
+                case Params.ENERGY:
+                    {
+                        COEFFICIENT = 10;
+                        break;
+                    }
+                case Params.VOLUME:
+                case Params.VOLUME_IMP1:
+                case Params.VOLUME_IMP2:
+                case Params.VOLUME_IMP3:
+                case Params.VOLUME_IMP4:
+                    {
+                        COEFFICIENT = 1000;
+                        break;
+                    }
+                case Params.TEMP_INP:
+                case Params.TEMP_OUTP:
+                    {
+                        COEFFICIENT = 10;
+                        break;
+                    }
+                case Params.TIME_ON:
+                case Params.TIME_ON_ERR:
+                    {
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+
+            if (!float.TryParse(hex_str, out value))
+            {
+                value = 0f;
+
+                string mgs = String.Format("Ошибка преобразования параметра {0} во float, исходная строка: {1}", param.ToString(), hex_str);
+                WriteToLog(mgs);
+
+                return false;
+            }
+            else
+            {
+                value /= COEFFICIENT;
+                return true;
+            }
+        }
+
+        public bool GetRecordsList(out List<Record> records)
+        {
+            records = new List<Record>();
+
+            List<byte> answerBytes = new List<byte>();
+            if (!SendREQ_UD2(out answerBytes) || answerBytes.Count == 0)
+            {
+                WriteToLog("ReadSerialNumber: не получены байты ответа");
+                return false;
+            }
+           
+            if (!SplitRecords(answerBytes, ref records) || records.Count == 0)
+            {
+                WriteToLog("ReadSerialNumber: не удалось разделить запись");
+                return false;
+            }
+
+            return true;
+        }
+
+
+
+        //возвращает true если установлен extension bit, позволяет опрелелить, есть ли DIFE/VIFE
+        private bool hasExtension(byte b)
+        {
+            byte EXTENSION_BIT_MASK = Convert.ToByte("10000000", 2);
+            int extensionBit = (b & EXTENSION_BIT_MASK) >> 7;
+            if (extensionBit == 1)
+                return true;
+            else
+                return false;
+        }
+
+        public bool SplitRecords(List<byte> recordsBytes, ref List<Record> recordsList)
+        {
+            recordsList = new List<Record>();
+            if (recordsBytes.Count == 0) return false;
+
+            bool doStop = false;
+            int index = 0;
+
+            //переберем записи
+            while (!doStop)
+            {
+                Record tmpRec = new Record();
+                tmpRec.DIFEs = new List<byte>();
+                tmpRec.VIFEs = new List<byte>();
+                tmpRec.dataBytes = new List<byte>();
+
+                tmpRec.DIF = recordsBytes[index];
+
+                //определим длину и тип данных
+                int dataLength = getLengthAndTypeFromDIF(tmpRec.DIF, out tmpRec.recordType);
+
+                if (hasExtension(tmpRec.DIF))
+                {
+                    //переход к байту DIFE
+                    index++;
+                    byte DIFE = recordsBytes[index];
+                    tmpRec.DIFEs.Add(DIFE);
+
+                    while (hasExtension(DIFE))
+                    {
+                        //перейдем к следующему DIFE
+                        index++;
+                        DIFE = recordsBytes[index];
+                        tmpRec.DIFEs.Add(DIFE);
+                    }
+                }
+
+                //переход к VIF
+                index++;
+                tmpRec.VIF = recordsBytes[index];
+
+                //проверим на наличие специального VIF, после которого следует ASCII строка
+                if (tmpRec.VIF == Convert.ToByte("11111100", 2))
+                {
+                    index++;
+                    int str_length = recordsBytes[index];
+                    index += str_length;
+                }
+
+                if (hasExtension(tmpRec.VIF))
+                {
+                    //переход к VIFE
+                    index++;
+                    byte VIFE = recordsBytes[index];
+                    tmpRec.VIFEs.Add(VIFE);
+
+                    while (hasExtension(VIFE))
+                    {
+                        //перейдем к следующему VIFE
+                        index++;
+                        VIFE = recordsBytes[index];
+                        tmpRec.VIFEs.Add(VIFE);
+                    }
+                }
+
+                //переход к первому байту данных
+                index++;
+                int dataCnt = 0;
+                while (dataCnt < dataLength)
+                {
+                    tmpRec.dataBytes.Add(recordsBytes[index]);
+                    index++;
+                    dataCnt++;
+                }
+
+                recordsList.Add(tmpRec);
+                if (index >= recordsBytes.Count - 1) doStop = true;
+            }
+
+            return true;
+        }
+        public bool SendREQ_UD2(out List<byte> recordsBytesList)
+        {
+            recordsBytesList = new List<byte>();
+
             /*данные проходящие по протоколу m-bus не нужно шифровать, а также не нужно
              применять отрицание для зарезервированных символов*/
             byte cmd = 0x7b;
             byte CS = (byte)(cmd + m_addr);
 
-            byte[] cmdArr = { 0x10, cmd, m_addr, CS, 0x16};
+            byte[] cmdArr = { 0x10, cmd, m_addr, CS, 0x16 };
             byte[] inp = new byte[256];
 
             try
@@ -85,34 +419,75 @@ namespace WindowsFormsApplication1
                 //режим, когда незнаем сколько байт нужно принять
                 m_vport.WriteReadData(findPackageSign, cmdArr, ref inp, cmdArr.Length, -1);
 
-                string msg = String.Format("SendREQ_UD2: принято inp.length: {0} байт;", inp.Length);
-                WriteToLog(msg);
-
-                
                 string answ_str = "";
                 foreach (byte b in inp)
                     answ_str += Convert.ToString(b, 16) + " ";
                 WriteToLog(answ_str);
 
-                int lastDataByteIndex = 0;
-                for (int i = inp.Length - 1; i >= 0; i--)
-                    if (inp[i] == 0x16)
-                    {
-                        lastDataByteIndex = i - 2;
-                        break;
-                    }
-
-                if (lastDataByteIndex == 0)
+                int firstAnswerByteIndex = -1;
+                int byteCIndex = -1;
+                //определим индекс первого байта С
+                for (int i = 0; i < inp.Length; i++)
                 {
-                    WriteToLog("SendREQ_UD2: не найден байт окончания ответа 0x16");
+                    int j = i + 3;
+                    if (inp[i] == 0x68 && j < inp.Length && inp[j] == 0x68)
+                    {
+                        firstAnswerByteIndex = i;
+                        byteCIndex = ++j;
+                    }
+                }
+
+                if (firstAnswerByteIndex == -1)
+                {
+                    WriteToLog("SendREQ_UD2: не определено начало ответа 0x68, firstAnswerByteIndex: " + firstAnswerByteIndex.ToString());
                     return false;
                 }
-                 
-                int data_length = lastDataByteIndex - REQ_UD2_HEADER_SIZE + 1;
-                byte[] data = new byte[data_length];
-                Array.Copy(inp, REQ_UD2_HEADER_SIZE, data, 0, data.Length);
-                //WriteToLog(BitConverter.ToString(data));
-                data_arr = data;
+
+                //определим длину данных ответа
+                byte dataLength = inp[firstAnswerByteIndex + 1];
+                if (dataLength != inp[firstAnswerByteIndex + 2])
+                {
+                    WriteToLog("SendREQ_UD2: не определена длина данных L, dataLength");
+                    return false;
+                }
+
+
+                byte C = inp[byteCIndex];
+                byte A = inp[byteCIndex + 1]; //адрес прибора 
+                byte CI = inp[byteCIndex + 2]; //тип ответа, если 72h то с переменной длиной
+
+                if (CI != 0x72)
+                {
+                    WriteToLog("SendREQ_UD2: счетчик должен ответить сообщением с переменной длиной, CI = 0x72");
+                    return false;
+                }
+
+                int firstFixedDataHeaderIndex = byteCIndex + 3;
+                byte[] factoryNumberBytes = new byte[4];
+                Array.Copy(inp, firstFixedDataHeaderIndex, factoryNumberBytes, 0, factoryNumberBytes.Length);
+                Array.Reverse(factoryNumberBytes);
+                //серийный номер полученный из заголовка может быть изменен, достовернее серийник, полученный из блока записей
+                string factoryNumber = BitConverter.ToString(factoryNumberBytes);
+
+                //12 байт - размер заголовка, индекс первого байта первой записи
+                int firstRecordByteIndex = firstFixedDataHeaderIndex + 12;
+
+                //байт окончания сообщения
+                int lastByteIndex = byteCIndex + dataLength + 1;
+                int byteCSIndex = byteCIndex + dataLength;
+                if (inp[lastByteIndex] != 0x16)
+                {
+                    WriteToLog("SendREQ_UD2: не найден байт окончания сообщения 0х16");
+                    return false;
+                }
+
+                //индекс последнего байта последнегй записи
+                int lastRecordByteIndex = lastByteIndex - 2;
+
+                //поместим байты записей в отдельный список
+                for (int i = firstRecordByteIndex; i <= lastRecordByteIndex; i++)
+                    recordsBytesList.Add(inp[i]);
+
                 return true;
             }
             catch (Exception ex)
@@ -122,10 +497,10 @@ namespace WindowsFormsApplication1
             }
         }
 
-        int findPackageSign(Queue<byte> queue)
-        {
-            return 0;
-        }
+
+        #endregion
+
+        #region Протокол PT
 
         public bool SendPT01_CMD(byte[] outCmdBytes, ref byte[] data_arr, byte[] outCmdDataBytes = null)
         {
@@ -354,49 +729,74 @@ namespace WindowsFormsApplication1
             }
         }
 
+        #endregion
+
         /// <summary>
-        /// Чтение серийного номера устройства
+        /// Открытие канала связи (отправкой SND_NKE)
+        /// </summary>
+        /// <returns></returns>
+        public bool OpenLinkCanal()
+        {
+            //SND_NKE
+            byte cmd = 0x40;
+            byte CS = (byte)(cmd + m_addr);
+
+            byte[] cmdArr = { 0x10, cmd, m_addr, CS, 0x16 };
+            byte[] inp = new byte[256];
+
+            try
+            {
+                //режим, когда незнаем сколько байт нужно принять
+                m_vport.WriteReadData(findPackageSign, cmdArr, ref inp, cmdArr.Length, -1);
+
+                if (inp == null || inp.Length == 0)
+                {
+                    WriteToLog("Не получен ответ при чтении серийного номера");
+                    return false;
+                }
+
+                if (inp[inp.Length - 1] == 0xE5)
+                {
+                    return true;
+                }
+                else
+                {
+                    WriteToLog("В ответе SND_NKE не найден подтверждающий байт 0xE5");
+                    return false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                WriteToLog("Ошибка при чтении серийного номера: " + ex.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Чтение серийного номера устройства (из RSP_UD, а не из заголовка)
         /// </summary>
         /// <param name="serial_number">Возвращаемое значение</param>
         /// <returns></returns>
         public bool ReadSerialNumber(ref string serial_number)
         {
-            byte[] data = null;
-            if (SendREQ_UD2(ref data))
+            List<Record> records = new List<Record>();
+            if (!GetRecordsList(out records))
             {
-                try
-                {
-                    byte[] serialNumbBytes = new byte[FACTORY_NUMBER_SIZE];
-                    Array.Copy(data, FACTORY_NUMBER_INDEX, serialNumbBytes, 0, serialNumbBytes.Length);
-                    Array.Reverse(serialNumbBytes, FACTORY_NUMBER_CMD, serialNumbBytes.Length - FACTORY_NUMBER_CMD);
-                    serial_number = BitConverter.ToString(serialNumbBytes, FACTORY_NUMBER_CMD).Replace("-", string.Empty);
-
-                    string outp_str = "Factory number: " + serial_number;
-                    WriteToLog(outp_str);
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    WriteToLog("ReadSerialNumber: err: " + ex.Message);
-                    return false;
-                }
-            }
-            else
-            {
+                WriteToLog("ReadSerialNumber: can't split records");
                 return false;
             }
-        }
 
-        public bool OpenLinkCanal()
-        {
-            string sn = "";
-            if (ReadSerialNumber(ref sn))
+            float res_val = 0f;
+            if (getRecordValueByParam(Params.FACTORY_NUMBER, records, out res_val))
             {
+                serial_number = ((int)res_val).ToString();
                 return true;
             }
             else
             {
+                WriteToLog("ReadSerialNumber: can't getRecordValueByParam: " + Params.FACTORY_NUMBER.ToString());
                 return false;
             }
         }
@@ -408,28 +808,69 @@ namespace WindowsFormsApplication1
         /// <returns></returns>
         public bool ReadCurrentValues(ushort param, ushort tarif, ref float recordValue)
         {
-            try
+            List<Record> records = new List<Record>();
+            if (!GetRecordsList(out records))
             {
-                switch (param)
-                {
-                    case 1: return ReadCurrentEnergy(tarif, ref recordValue);
-                    case 2: return ReadCurrentVolume(tarif, ref recordValue);
-                    case 3: return ReadTimeOn(tarif, ref recordValue);
-                    case 4: return ReadErrorCode(ref recordValue);
-                    case 5: return ReadCurrentTemperature(tarif, ref recordValue);
-                    case 6: return ReadImpulseInput((int)tarif, ref recordValue);
-
-                    default:
-                        {
-                            WriteToLog("ReadCurrentValues: для параметра " + param.ToString() + " нет обработчика");
-                            return false;
-                        }
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteToLog("ReadCurrentValues: exception: " + ex.Message, true);
+                WriteToLog("ReadCurrentValues: can't get records list");
                 return false;
+            }
+
+            switch (param)
+            {
+                case 1:
+                    {
+                        return getRecordValueByParam(Params.ENERGY, records, out recordValue);
+                    }
+                case 2:
+                    {
+                        return getRecordValueByParam(Params.VOLUME, records, out recordValue);
+                    }
+                case 3:
+                    {
+                        return getRecordValueByParam(Params.TIME_ON, records, out recordValue);
+                    }
+                case 4:
+                    {
+                        return getRecordValueByParam(Params.TIME_ON_ERR, records, out recordValue);
+                    }
+                case 5:
+                    {
+                        Params tmp_param = Params.TEMP_INP;
+                        switch (tarif)
+                        {
+                            case 1: { tmp_param = Params.TEMP_OUTP; break; }
+                            default:
+                                {
+                                    tmp_param = Params.TEMP_INP;
+                                    break;
+                                }
+                        }
+
+                        return getRecordValueByParam(tmp_param, records, out recordValue);
+                    }
+                case 6:
+                    {
+                        Params tmp_param = Params.VOLUME_IMP1;
+                        switch (tarif)
+                        {
+                            case 2: { tmp_param = Params.VOLUME_IMP2; break; }
+                            case 3: { tmp_param = Params.VOLUME_IMP3; break; }
+                            case 4: { tmp_param = Params.VOLUME_IMP4; break; }
+                            default:
+                                {
+                                    tmp_param = Params.VOLUME_IMP1;
+                                    break;
+                                }
+                        }
+
+                        return getRecordValueByParam(tmp_param, records, out recordValue);
+                    }
+            
+                default:
+                    {
+                        WriteToLog("ReadCurrentValues: для параметра " + param.ToString() + " нет обработчика");
+                        return false;
+                    }
             }
         }
 
@@ -485,143 +926,6 @@ namespace WindowsFormsApplication1
 
         #endregion
 
-        public bool ReadCurrentEnergy(ushort tarif, ref float value)
-        {
-            byte[] data = null;
-            if (SendREQ_UD2(ref data))
-            {
-                /*энергия записана в 6ти кодебайтах в hex-dec*/
-                byte[] energyBytes = new byte[ENERGY_SIZE];
-                Array.Copy(data, ENERGY_INDEX, energyBytes, 0, ENERGY_SIZE);
-                Array.Reverse(energyBytes, ENERGY_CMD, energyBytes.Length - ENERGY_CMD);
-
-                string hex_str = BitConverter.ToString(energyBytes, ENERGY_CMD).Replace("-", string.Empty);
-                const int ENERGY_COEFFICIENT = 10000000;
-                float temp_val = (float)Convert.ToDouble(hex_str) / ENERGY_COEFFICIENT;
-
-                /*TODO: проверить ковертацию float в double*/
-                string outp_str = "Energy GCal: " + temp_val.ToString();
-                WriteToLog(outp_str);
-                value = temp_val;
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool ReadCurrentVolume(ushort tarif, ref float value)
-        {
-            byte[] data = null;
-            if (SendREQ_UD2(ref data))
-            {
-                /*объем записан в 4х байтах в hex-dec*/
-                byte[] volumeBytes = new byte[VOLUME_SIZE];
-                Array.Copy(data, VOLUME_INDEX, volumeBytes, 0, VOLUME_SIZE);
-                Array.Reverse(volumeBytes, VOLUME_CMD, volumeBytes.Length - VOLUME_CMD);
-
-                string hex_str = BitConverter.ToString(volumeBytes, VOLUME_CMD).Replace("-", string.Empty);
-
-                const int VOLUME_COEFFICIENT = 1000;
-                float temp_val = (float)Convert.ToDouble(hex_str) / VOLUME_COEFFICIENT;
-
-
-                string outp_str = "Volume m3: " + temp_val.ToString();
-                WriteToLog(outp_str);
-                value = temp_val;
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool ReadCurrentTemperature(ushort tarif, ref float value)
-        {
-            byte[] data = null;
-            if (SendREQ_UD2(ref data))
-            {
-
-                byte temp_index = 0;
-                byte temp_size = 0;
-                byte temp_cmd = 0;
-
-                switch (tarif)
-                {
-                    case 0:
-                        {
-                            temp_index = TEMP_INP_INDEX;
-                            temp_cmd = TEMP_INP_CMD;
-                            temp_size = TEMP_INP_SIZE;
-                            break;
-                        }
-                    case 1:
-                        {
-                            temp_index = TEMP_OUTP_INDEX;
-                            temp_cmd = TEMP_OUTP_CMD;
-                            temp_size = TEMP_OUTP_SIZE;
-                            break;
-                        }
-                    default:
-                        {
-                            WriteToLog("Некорректное значение tarif");
-                            return false;
-                        }
-                }
-
-                /*температура записана в 2х байтах в hex-dec*/
-                byte[] temperatureBytes = new byte[temp_size];
-                Array.Copy(data, temp_index, temperatureBytes, 0, temp_size);
-                Array.Reverse(temperatureBytes, temp_cmd, temperatureBytes.Length - temp_cmd);
-
-                string hex_str = BitConverter.ToString(temperatureBytes, temp_cmd).Replace("-", string.Empty);
-
-                const int TEMP_COEFFICIENT = 10;
-                float temp_val = (float)Convert.ToDouble(hex_str) / TEMP_COEFFICIENT;
-
-                string outp_str = "Temp " + tarif.ToString() + " (m3): " + temp_val.ToString();
-                WriteToLog(outp_str);
-                value = temp_val;
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool ReadTimeOn(ushort tarif, ref float value)
-        {
-            byte[] data = null;
-            if (SendREQ_UD2(ref data))
-            {
-                /*время работы записано в 4х байтах в hex-dec*/
-                byte[] timeonBytes = new byte[TIME_ON_SIZE];
-                Array.Copy(data, TIME_ON_INDEX, timeonBytes, 0, TIME_ON_SIZE);
-                Array.Reverse(timeonBytes, TIME_ON_CMD, timeonBytes.Length - TIME_ON_CMD);
-
-                string hex_str = BitConverter.ToString(timeonBytes, TIME_ON_CMD).Replace("-", string.Empty);
-
-                const int TIMEON_COEFFICIENT = 1;
-                float temp_val = (float)Convert.ToDouble(hex_str) / TIMEON_COEFFICIENT;
-
-
-                string outp_str = "TimeOn (h): " + temp_val.ToString();
-                WriteToLog(outp_str);
-                value = temp_val;
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
         public bool ReadArchiveLastVal(ref ArchiveValue archVal)
         {
@@ -740,77 +1044,6 @@ namespace WindowsFormsApplication1
             }
 
             return true;
-        }
-
-        public bool ReadErrorCode(ref float errCode)
-        {
-            byte[] data = null;
-            if (SendREQ_UD2(ref data))
-            {
-                byte[] errcodeBytes = new byte[ERROR_CODE_SIZE];
-                Array.Copy(data, ERROR_CODE_INDEX, errcodeBytes, 0, ERROR_CODE_SIZE);
-
-                float temp_val = Convert.ToSingle(errcodeBytes[ERROR_CODE_CMD]);
-
-                string outp_str = "ErrorCode: " + temp_val.ToString();
-                WriteToLog(outp_str);
-                errCode = temp_val;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Чтение дополнительных импульстных входов (объем м3)
-        /// </summary>
-        /// <param name="outputNumber">Номер входа от 1 до 4</param>
-        /// <param name="impulseOInpVal"></param>
-        /// <returns></returns>
-        public bool ReadImpulseInput(int outputNumber, ref float impulseOInpVal)
-        {
-            if (outputNumber == 0 || outputNumber > IMPULSE_INP_CMD_ARR.Length + 1)
-            {
-                this.WriteToLog("ReadImpulseInput: outputNumber == 0 || outputNumber > IMPULSE_INP_CMD_ARR.Length");
-                return false;
-            }
-
-            byte[] data = null;
-            if (SendREQ_UD2(ref data))
-            {
-                int val_size = IMPULSE_INP_SIZE_ARR[outputNumber - 1];
-                int cmd_size = IMPULSE_INP_CMD_ARR[outputNumber - 1];
-                int val_index = IMPULSE_INP_INDEX_ARR[outputNumber - 1];
-
-                /*объем записан в 4х байтах в hex-dec*/
-                byte[] volumeBytes = new byte[val_size];
-                Array.Copy(data, val_index, volumeBytes, 0, val_size);
-                Array.Reverse(volumeBytes, cmd_size, volumeBytes.Length - cmd_size);
-
-                string hex_str = BitConverter.ToString(volumeBytes, cmd_size).Replace("-", string.Empty);
-
-                const int VOLUME_COEFFICIENT = 1000;
-                float temp_val = (float)Convert.ToDouble(hex_str) / VOLUME_COEFFICIENT;
-
-                string outp_str = "Impulse input m3(" + outputNumber.ToString() + "): " + temp_val.ToString();
-                WriteToLog(outp_str);
-                impulseOInpVal = temp_val;
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
-
-        public bool ReadMonthlyValues(DateTime dt, ushort param, ushort tarif, ref float recordValue)
-        {
-            return false;
         }
 
 
@@ -979,16 +1212,26 @@ namespace WindowsFormsApplication1
             return true;          
         }
 
+        #region Неиспользуемые методы интерфейса
 
         public bool ReadSliceArrInitializationDate(ref DateTime lastInitDt)
         {
             return false;
         }
-
         public bool SyncTime(DateTime dt)
         {
             return false;
         }
+        public bool ReadMonthlyValues(DateTime dt, ushort param, ushort tarif, ref float recordValue)
+        {
+            return false;
+        }
+        int findPackageSign(Queue<byte> queue)
+        {
+            return 0;
+        }
+
+        #endregion
 
     }
 
@@ -1108,8 +1351,4 @@ namespace WindowsFormsApplication1
 
         }
     }
-
-
-
-
 }
