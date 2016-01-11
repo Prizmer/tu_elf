@@ -21,54 +21,6 @@ namespace WindowsFormsApplication1
 
         private byte m_addr = 0x0;
 
-        //private SerialPort m_port;
-
-        const int REQ_UD2_HEADER_SIZE = 24;
-        const int REQ_UD2_DATA_SIZE = 97;
-        const int REQ_UD2_ANSW_SIZE = 123;
-
-        #region Константы для разобра ответа REQ_UD2
-
-        const byte FACTORY_NUMBER_INDEX = 0;
-        const byte FACTORY_NUMBER_CMD = 2;
-        const byte FACTORY_NUMBER_SIZE = 6;
-
-        const byte DATE_CMD = 2;
-        const byte DATE_INDEX = 6;
-        const byte DATE_SIZE = 4;
-
-        const byte ENERGY_INDEX = 14;
-        const byte ENERGY_SIZE = 14;
-        const byte ENERGY_CMD = 8;
-
-        const byte ERROR_CODE_INDEX = 10;
-        const byte ERROR_CODE_SIZE = 4;
-        const byte ERROR_CODE_CMD = 3;
-
-        byte[] IMPULSE_INP_INDEX_ARR = { 34, 41, 48, 55 };
-        byte[] IMPULSE_INP_SIZE_ARR = { 7, 7, 7, 8 };
-        byte[] IMPULSE_INP_CMD_ARR = { 3, 3, 3, 4 };
-
-        /**/
-        const byte VOLUME_INDEX = 28;
-        const byte VOLUME_SIZE = 6;
-        const byte VOLUME_CMD = 2;
-
-        const byte TEMP_INP_INDEX = 71;
-        const byte TEMP_INP_SIZE = 4;
-        const byte TEMP_INP_CMD = 2;
-
-        const byte TEMP_OUTP_INDEX = 75;
-        const byte TEMP_OUTP_SIZE = 4;
-        const byte TEMP_OUTP_CMD = 2;
-
-        const byte TIME_ON_INDEX = 79;
-        const byte TIME_ON_SIZE = 6;
-        const byte TIME_ON_CMD = 2;
-
-        #endregion
-
-
         #region Протокол MBUS
 
         public struct Record
@@ -321,7 +273,6 @@ namespace WindowsFormsApplication1
             }
         }
 
-
         public bool GetRecordsList(out List<Record> records)
         {
             records = new List<Record>();
@@ -341,8 +292,6 @@ namespace WindowsFormsApplication1
 
             return true;
         }
-
-
 
         //возвращает true если установлен extension bit, позволяет опрелелить, есть ли DIFE/VIFE
         private bool hasExtension(byte b)
@@ -531,8 +480,6 @@ namespace WindowsFormsApplication1
             }
         }
 
-
-
         public bool GetAllValues(out string res)
         {
             res = "Ошибка";
@@ -558,14 +505,12 @@ namespace WindowsFormsApplication1
             return true;
         }
 
-
         #endregion
 
         #region Протокол PT
 
         public bool SendPT01_CMD(byte[] outCmdBytes, ref byte[] data_arr, byte[] outCmdDataBytes = null)
         {
-
             List<byte> resCmdList = new List<byte>();
 
             bool isThereCmdData = false;
@@ -582,25 +527,29 @@ namespace WindowsFormsApplication1
             resCmdList.Add(0x4d);
 
             byte crcn = CRC8(outCmdBytes, outCmdBytes.Length);
-            byte[] cmdTmp = new byte[outCmdBytes.Length + 1];
-            Array.Copy(outCmdBytes, cmdTmp, outCmdBytes.Length);
-            cmdTmp[cmdTmp.Length - 1] = crcn;
-            byte[] encrCmdWCS = new byte[cmdTmp.Length];
-            EncryptByteArr(cmdTmp, ref encrCmdWCS);
-            CodeControlBytes(encrCmdWCS, ref encrCmdWCS);
-            resCmdList.AddRange(encrCmdWCS);
+
+            List<byte> cmdTmpList = new List<byte>();
+            cmdTmpList.AddRange(outCmdBytes);
+            cmdTmpList.Add(crcn);
+
+            List<byte> encrCmdWCSList = new List<byte>(cmdTmpList.Count);
+            EncryptByteArr(cmdTmpList, ref encrCmdWCSList);
+
+            CodeControlBytes(ref encrCmdWCSList);
+            resCmdList.AddRange(encrCmdWCSList.ToArray());
 
             if (isThereCmdData)
             {
                 byte crcd = CRC8(outCmdDataBytes, outCmdDataBytes.Length);
-                cmdTmp = new byte[outCmdDataBytes.Length + 1];
-                Array.Copy(outCmdDataBytes, cmdTmp, outCmdDataBytes.Length);
-                cmdTmp[cmdTmp.Length - 1] = crcd;
 
-                byte[] encrCmdDataWCS = new byte[cmdTmp.Length];
-                EncryptByteArr(cmdTmp, ref encrCmdDataWCS);
-                CodeControlBytes(encrCmdDataWCS, ref encrCmdDataWCS);
-                resCmdList.AddRange(encrCmdDataWCS);
+                List<byte> cmdDataTmp = new List<byte>();
+                cmdDataTmp.AddRange(outCmdDataBytes);
+                cmdDataTmp.Add(crcd);
+
+                encrCmdWCSList = new List<byte>(cmdDataTmp.Count);
+                EncryptByteArr(cmdDataTmp, ref encrCmdWCSList);
+                CodeControlBytes(ref encrCmdWCSList);
+                resCmdList.AddRange(encrCmdWCSList.ToArray());
             }
 
             resCmdList.Add(0x16);
@@ -613,7 +562,6 @@ namespace WindowsFormsApplication1
 
             //если указать -1 в качестве ожидаемой длины ответа, длина ответа будет = длине принятых данных
             if (m_vport.WriteReadData(findPackageSign, resCmd, ref data_arr, resCmd.Length, -1) == 0) return false;
-            //if (!sport_manager.WriteReadData(resCmd, ref data_arr)) return false;
 
             List<byte> data_arr_list = new List<byte>();
             data_arr_list.AddRange(data_arr);
@@ -628,8 +576,6 @@ namespace WindowsFormsApplication1
                     WriteToLog("SendPT01_CMD: корректный ответ не может быть меньше 6 байт по протоколу РТ");
                     return false;
                 }
-
-                Array.Copy(data_arr_list.ToArray(), 0, data_arr, 0, data_arr_list.Count);
 
                 if (data_arr.Length == resCmd.Length)
                 {
@@ -653,12 +599,19 @@ namespace WindowsFormsApplication1
 
                 //определим кол-во байт полезных данных в ответе
                 byte[] bCountArr = new byte[2];
+                if ((fi + 2) > data_arr.Length - 1 || (fi + 4) > data_arr.Length - 1)
+                {
+                    WriteToLog("SendPT01_CMD: индекс за пределами массива 1");
+                    return false;
+                }
+
                 Array.Copy(data_arr, fi + 2, bCountArr, 0, 2);
                 DecodeControlBytes(bCountArr, ref bCountArr);
                 if (!BitConverter.IsLittleEndian)
                     Array.Reverse(bCountArr);
 
                 DecryptByteArr(bCountArr, ref bCountArr);
+
                 byte[] bCountArr2 = new byte[4];
                 Array.Copy(bCountArr, bCountArr2, bCountArr.Length);
                 //полезные данные без учета байта crc8
@@ -674,6 +627,11 @@ namespace WindowsFormsApplication1
                 byte[] final_data_arr = new byte[answerBytesCount + 1];
                 try
                 {
+                    if (se > data_arr.Length - 1)
+                    {
+                        WriteToLog("SendPT01_CMD: индекс за пределами массива 2");
+                        return false;
+                    }
                     Array.Copy(data_arr, se, final_data_arr, 0, answerBytesCount + 1);
                     DecodeControlBytes(final_data_arr, ref final_data_arr);
                     DecryptByteArr(final_data_arr, ref final_data_arr);
@@ -686,7 +644,6 @@ namespace WindowsFormsApplication1
                     Array.Clear(data_arr, 0, data_arr.Length);
                     return false;
                 }
-
 
                 return true;
             }
@@ -712,10 +669,10 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public void CodeControlBytes(byte[] inpArr, ref byte[] outpArr)
+        public void CodeControlBytes(ref List<byte> cmdBytesList)
         {
             List<byte> tmpList = new List<byte>();
-            tmpList.AddRange(inpArr);
+            tmpList.AddRange(cmdBytesList);
             for (int i = 0; i < tmpList.Count; i++)
             {
                 if (isControlByte(tmpList[i]))
@@ -734,7 +691,7 @@ namespace WindowsFormsApplication1
                 }
             }
 
-            outpArr = tmpList.ToArray();
+            cmdBytesList = tmpList;
         }
 
         public void DecodeControlBytes(byte[] inpArr, ref byte[] outpArr)
@@ -774,6 +731,20 @@ namespace WindowsFormsApplication1
                 int part2 = (b >> 2) | part1;
                 byte res = (byte)~part2;
                 outpArr[i] = res;
+            }
+        }
+
+        public void EncryptByteArr(List<byte> inpArr, ref List<byte> outpArr)
+        {
+            outpArr = new List<byte>(inpArr.Count);
+            for (int i = 0; i < inpArr.Count; i++)
+            {
+                byte mask = 0x03;
+                byte b = inpArr[i];
+                int part1 = (b & mask) << 6;
+                int part2 = (b >> 2) | part1;
+                byte res = (byte)~part2;
+                outpArr.Add(res);
             }
         }
 
