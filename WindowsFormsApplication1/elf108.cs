@@ -315,6 +315,7 @@ namespace WindowsFormsApplication1
             }
         }
 
+
         public bool GetRecordsList(out List<Record> records)
         {
             records = new List<Record>();
@@ -522,6 +523,33 @@ namespace WindowsFormsApplication1
                 WriteToLog("SendREQ_UD2: " + ex.Message);
                 return false;
             }
+        }
+
+
+
+        public bool GetAllValues(out string res)
+        {
+            res = "Ошибка";
+            List<Record> records = new List<Record>();
+            if (!GetRecordsList(out records))
+            {
+                WriteToLog("GetAllValues: can't split records");
+                return false;
+            }
+
+            res = "";
+            foreach (Params p in Enum.GetValues(typeof(Params)))
+            {
+                float val = -1f;
+                string s = "false;";
+
+                if (getRecordValueByParam(p, records, out val))
+                    s = val.ToString();
+
+                res += String.Format("{0}: {1}\n", p.ToString(), s);
+            }
+
+            return true;
         }
 
 

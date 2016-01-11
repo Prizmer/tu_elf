@@ -432,17 +432,10 @@ namespace WindowsFormsApplication1
             }
 
             addMessageToScreen();
-            foreach (elf108.Params p in Enum.GetValues(typeof(elf108.Params)))
-            {
-                float val = -1f;
-                string res = "false;";
+            Meter.GetAllValues(out resStr);
+            addMessageToScreen(resStr);
+            addMessageToScreen();
 
-                if (Meter.getRecordValueByParam(p, out val))
-                    res = val.ToString();
-
-                string res_str = String.Format("{0}: {1}", p.ToString(), val);
-                addMessageToScreen(res_str);
-            }
         }
 
     }
