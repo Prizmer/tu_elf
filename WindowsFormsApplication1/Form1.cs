@@ -49,10 +49,8 @@ namespace WindowsFormsApplication1
 
             clearScreen();
             addMessageToScreen("Приветствие!");
-            addMessageToScreen("Уточните настройки порта и нажмите \"Применить\"");
+            addMessageToScreen("Уточните настройки порта и нажмите \"OK\"");
             addMessageToScreen();
-            addMessageToScreen("Значение \"-1\" следует считать некорректным");
-            //Parity.Even.GetHashCode().ToString();
 
             portInitialized = false;
 
