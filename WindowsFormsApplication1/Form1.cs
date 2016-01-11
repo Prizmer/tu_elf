@@ -359,7 +359,7 @@ namespace WindowsFormsApplication1
         private void button1_Click(object sender, EventArgs e)
         {
             clearScreen();
-            addMessageToScreen("*** Тест связм ***");
+            addMessageToScreen("*** Тест связи ***");
 
             if (!Meter.OpenLinkCanal())
             {

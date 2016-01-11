@@ -536,7 +536,7 @@ namespace Prizmer.Ports
                                 in_buffer[i] = temp_buffer[i];
 
 
-
+                            ClosePort();
                             return reading_size;
                         }
 
@@ -556,6 +556,7 @@ namespace Prizmer.Ports
                 WriteToLog("Open port Error");
             }
 
+            ClosePort();
             return reading_size;
         }
 
