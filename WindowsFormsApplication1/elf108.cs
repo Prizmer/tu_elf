@@ -407,6 +407,12 @@ namespace WindowsFormsApplication1
                     answ_str += Convert.ToString(b, 16) + " ";
                 WriteToLog(answ_str);
 
+                if (inp.Length < 6)
+                {
+                    WriteToLog("SendREQ_UD2: Длина корректного ответа не может быть меньше 5 байт: " + answ_str);
+                    return false;
+                }
+
                 int firstAnswerByteIndex = -1;
                 int byteCIndex = -1;
                 //определим индекс первого байта С

@@ -436,5 +436,13 @@ namespace WindowsFormsApplication1
 
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+            uint val = (uint)numericUpDown5.Value;
+            uint addr = val % 239;
+            label8.Text = addr.ToString();
+        }
+
     }
 }
