@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("WindowsFormsApplication1")]
+[assembly: AssemblyTitle("PI_Elf_TestUtil")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("WindowsFormsApplication1")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2015")]
+[assembly: AssemblyCompany("Правильные измерения")]
+[assembly: AssemblyProduct("Elf - тестовая утилита")]
+[assembly: AssemblyCopyright("Copyright © PRIZMER 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
