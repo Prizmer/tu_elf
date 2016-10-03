@@ -6,6 +6,7 @@ using System.Threading;
 
 using System.IO;
 using System.IO.Ports;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Prizmer.Ports
@@ -60,8 +61,70 @@ namespace Prizmer.Ports
             return 0;
         }
 
+        //Более прозрачная функция для тестовых целей
+        public int WriteReadData(byte[] out_buffer, ref byte[] in_buffer)
+        {
+            Queue<byte> reading_queue = new Queue<byte>(8192);
+
+            // Соединяемся с удаленным устройством
+            IPAddress remIpAddr = IPAddress.Parse(this.m_address);
+            IPEndPoint ipEndPoint = new IPEndPoint(remIpAddr, this.m_port);
+
+            Socket sender = new Socket(remIpAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            sender.ReceiveTimeout = this.m_read_timeout;
+            sender.SendTimeout = this.m_write_timeout;
+
+            // Соединяем сокет с удаленной точкой
+            sender.Connect(ipEndPoint);
+
+            // Отправляем данные через сокет
+            int bytesSent = sender.Send(out_buffer);
+            WriteToLog("Bytes sent: " + bytesSent);
+
+            Thread.Sleep(100);
+            uint elapsed_time_count = 0;
+
+            // чтение данных
+            while (elapsed_time_count < m_read_timeout)
+            {
+                if (sender.Available > 0)
+                {
+                    try
+                    {
+                        byte[] tmp_buff = new byte[sender.Available];
+                        int readed_bytes = sender.Receive(tmp_buff);// tcp.Client.Receive(tmp_buff, 0, tmp_buff.Length, SocketFlags.None);
+
+                        for (int i = 0; i < readed_bytes; i++)
+                        {
+                            reading_queue.Enqueue(tmp_buff[i]);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteToLog("Receive: " + ex.Message);
+                    }
+                }
+                elapsed_time_count += 50;
+                Thread.Sleep(50);
+            }
+
+
+            WriteToLog("Bytes received totally: " + reading_queue.Count);
+            in_buffer = reading_queue.ToArray();
+
+            // Освобождаем сокет
+            sender.Shutdown(SocketShutdown.Both);
+            sender.Close();
+            reading_queue.Clear();
+
+            return in_buffer.Length;
+        }
+
         public int WriteReadData(FindPacketSignature func, byte[] out_buffer, ref byte[] in_buffer, int out_length, int target_in_length, uint pos_count_data_size = 0, uint size_data = 0, uint header_size = 0)
         {
+
+            //return WriteReadData(out_buffer, ref in_buffer);
+
             int reading_size = 0;
             using (TcpClient tcp = new TcpClient())
             {
@@ -115,6 +178,8 @@ namespace Prizmer.Ports
                                         elapsed_time_count += 50;
                                         Thread.Sleep(50);
                                     }
+
+
 
                                     int pos = -1;
                                     if ((pos = func(reading_queue)) >= 0)
@@ -183,7 +248,7 @@ namespace Prizmer.Ports
         {
             try
             {
-                using (StreamWriter sw = new StreamWriter(@"logs\tcp_ports.log", true, Encoding.Default))
+                using (StreamWriter sw = new StreamWriter(@"tcp_ports.txt", true, Encoding.Default))
                 {
                     sw.WriteLine(DateTime.Now.ToString() + ": " + GetName() + ": " + str);
                 }

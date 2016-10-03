@@ -45,7 +45,7 @@ namespace WindowsFormsApplication1
 
             portCmbBox.SelectedIndex = 0;
             addressCmbBox.SelectedIndex = 0;
-            radioButton1.Checked = true;
+            radioButton2.Checked = true;
 
             clearScreen();
             addMessageToScreen("Приветствие!");
@@ -83,7 +83,7 @@ namespace WindowsFormsApplication1
 
         private void initTCPIP(string addr, string port)
         {
-            vp = new TcpipPort(addr, int.Parse(port), 1000, 1000, 50);
+            vp = new TcpipPort(addr, int.Parse(port), (ushort)int.Parse(textBox4.Text), (ushort)numericUpDown4.Value, (ushort)int.Parse(textBox6.Text));
         }
 
         private void initAddr(string addressHex)
@@ -439,9 +439,7 @@ namespace WindowsFormsApplication1
         private void button4_Click(object sender, EventArgs e)
         {
 
-            uint val = (uint)numericUpDown5.Value;
-            uint addr = val % 239;
-            label8.Text = addr.ToString();
+ 
         }
 
         private void btnWriteImpInpVal_Click(object sender, EventArgs e)
