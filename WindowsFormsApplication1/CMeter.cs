@@ -10,19 +10,6 @@ using Prizmer.Ports;
 namespace Prizmer.Meters
 {
 
-    /// <summary>
-    /// Описывает типовое архивное значение
-    /// </summary>
-    public struct ArchiveValue
-    {
-        public int id;
-        public DateTime dt;
-        public float energy;
-        public float volume;
-        public int timeOn;
-        public int timeErr;
-    };
-
     public class CMeter
     {
 

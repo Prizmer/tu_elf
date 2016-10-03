@@ -14,6 +14,8 @@ using System.Collections;
 using Prizmer.Ports;
 using Prizmer.Meters;
 
+using ElfApatorCommonDriver;
+
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form

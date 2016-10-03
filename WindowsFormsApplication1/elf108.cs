@@ -5,14 +5,27 @@ using System.Text;
 using System.IO;
 using System.IO.Ports;
 
+//классы совместимости с СО
+using Prizmer;
 using Prizmer.Meters;
 using Prizmer.Ports;
 
-namespace WindowsFormsApplication1
+namespace ElfApatorCommonDriver
 {
-  
+    /// <summary>
+    /// Описывает типовое архивное значение
+    /// </summary>
+    public struct ArchiveValue
+    {
+        public int id;
+        public DateTime dt;
+        public float energy;
+        public float volume;
+        public int timeOn;
+        public int timeErr;
+    };
 
-    public class elf108 : Prizmer.Meters.CMeter
+    public class elf108 : CMeter
     {
         public void Init(uint address, string pass, VirtualPort vp)
         {
@@ -29,7 +42,7 @@ namespace WindowsFormsApplication1
             return answ_str;
         }
 
-        private byte m_addr = 0x0;
+        private byte m_addr = 0xFD;
 
         #region Протокол MBUS
 
@@ -217,12 +230,17 @@ namespace WindowsFormsApplication1
                         break;
                     }
                 case Params.VOLUME:
+                case Params.VOLUME_FLOW:
+                    {
+                        COEFFICIENT = 1000;
+                        break;
+                    }
                 case Params.VOLUME_IMP1:
                 case Params.VOLUME_IMP2:
                 case Params.VOLUME_IMP3:
                 case Params.VOLUME_IMP4:
-                case Params.VOLUME_FLOW:
                     {
+                        
                         COEFFICIENT = 1000;
                         break;
                     }
@@ -578,7 +596,6 @@ namespace WindowsFormsApplication1
 
             List<byte> data_arr_list = new List<byte>();
             data_arr_list.AddRange(data_arr);
-            WriteToLog("Received: " + GetStringFromByteArray(data_arr));
 
             //если начало правильное
 
@@ -787,6 +804,180 @@ namespace WindowsFormsApplication1
 
         #endregion
 
+        #region Новые методы, введенные для совместимости с оболочкой
+
+        bool bLogOutBytes = true;
+
+        public bool ToBcd(int value, ref byte[] byteArr)
+        {
+            if (value < 0 || value > 99999999)
+                return false;
+
+            byte[] ret = new byte[4];
+            for (int i = 0; i < 4; i++)
+            {
+                ret[i] = (byte)(value % 10);
+                value /= 10;
+                ret[i] |= (byte)((value % 10) << 4);
+                value /= 10;
+            }
+
+            Array.Reverse(ret);
+            byteArr = ret;
+
+            return true;
+        }
+
+        //используется для вывода в лог
+        public string current_secondary_id_str = "серийный номер не определен";
+        //выделяет счетчик по серийнику и возвращает признак того что прибор на связи
+        public bool SelectBySecondaryId(int factoryNumber)
+        {
+            current_secondary_id_str = factoryNumber.ToString();
+
+            byte cmd = 0x53;
+            byte CI = 0x52;
+
+            byte[] addrArr = null;
+            if (!ToBcd(factoryNumber, ref addrArr))
+                return false;
+
+            byte CS = (byte)(cmd + m_addr + CI + addrArr[3] + addrArr[2] + addrArr[1] + addrArr[0] + 0xFF + 0xFF + 0xFF + 0xFF);
+
+            byte[] cmdArr = { 0x68, 0x0B, 0x0B, 0x68, cmd, m_addr, CI, addrArr[3], addrArr[2], addrArr[1], addrArr[0], 
+                                0xFF, 0xFF , 0xFF,0xFF, CS, 0x16 };
+            int firstRecordByteIndex = cmdArr.Length + 4 + 3 + 12;
+
+
+            byte[] inp = new byte[512];
+            try
+            {
+                int readBytes = m_vport.WriteReadData(findPackageSign, cmdArr, ref inp, cmdArr.Length, -1);
+                for (int i = inp.Length - 1; i >= 0; i--)
+                    if (inp[i] == 0xE5)
+                    {
+                        WriteToLog("SelectBySecondaryId: выбран счетчик " + current_secondary_id_str, bLogOutBytes);
+                        return true;
+                    }
+
+                WriteToLog("SelectBySecondaryId: в ответе не найден байт подтверждения 0xE5 для счетчика " + current_secondary_id_str);
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                WriteToLog("SelectBySecondaryId: " + ex.Message);
+                return false;
+            }
+        }
+
+        //сбрасывает выделение конкретного счптчика
+        bool SND_NKE(ref bool confirmed)
+        {
+            byte cmd = 0x40;
+            byte CS = (byte)(cmd + m_addr);
+
+            byte[] cmdArr = { 0x10, cmd, m_addr, CS, 0x16 };
+            int firstRecordByteIndex = cmdArr.Length + 4 + 3 + 12;
+
+            byte[] inp = new byte[512];
+            try
+            {
+                int readBytes = m_vport.WriteReadData(findPackageSign, cmdArr, ref inp, cmdArr.Length, -1);
+                if (readBytes >= 1 && inp[readBytes - 1] == 0xE5)
+                    confirmed = true;
+                else
+                    confirmed = false;
+
+                WriteToLog("SND_NKE: деселекция", bLogOutBytes);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WriteToLog("SND_NKE: " + ex.Message);
+                return false;
+            }
+
+        }
+        public bool UnselectAllMeters()
+        {
+            bool res = false;
+            this.SND_NKE(ref res);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Чтение списка текущих значений для драйвера теплоучет
+        /// </summary>
+        /// <param name="valDict"></param>
+        /// <returns></returns>
+        public bool ReadCurrentValues(List<int> paramCodes, out List<float> values)
+        {
+            values = new List<float>();
+            List<Record> records = new List<Record>();
+            List<byte> answerBytes = new List<byte>();
+
+            if (!SendREQ_UD2(out answerBytes) || answerBytes.Count == 0)
+            {
+                WriteToLog("ReadCurrentValues: не получены байты ответа");
+                return false;
+            }
+
+            //вывод в лог "сырых" байт, поступивших со счетчика
+            if (bLogOutBytes)
+            {
+                string answBytesStr = String.Format("ReadCurrentValues, response:\n[{0}];", BitConverter.ToString(answerBytes.ToArray()).Replace("-", " "));
+                WriteToLog(answBytesStr);
+            }
+
+            if (!SplitRecords(answerBytes, ref records) || records.Count == 0)
+            {
+                WriteToLog("ReadCurrentValues: не удалось разделить запись");
+                return false;
+            }
+
+            //вывод в лог байт параметров, выделенных программой из "сырого" ответа
+            if (bLogOutBytes)
+            {
+                string recordsStr = String.Empty;
+                foreach (Record tR in records)
+                    recordsStr += "[" + BitConverter.ToString(tR.dataBytes.ToArray()).Replace("-", " ") + "], ";
+
+                string answBytesStr = String.Format("ReadCurrentValues, records:\n{0};", recordsStr);
+                WriteToLog(answBytesStr);
+            }
+
+            foreach (int p in paramCodes)
+            {
+                float tmpVal = -1f;
+                values.Add(tmpVal);
+
+                if (!Enum.IsDefined(typeof(Params), p))
+                {
+                    WriteToLog("ReadCurrentValues не удалось найти в перечислении paramCodes параметр " + p.ToString());
+                    continue;
+                }
+
+                Params tmpP = (Params)p;
+
+                //не путать с перегруженным аналогом
+                if (!getRecordValueByParam(tmpP, records, out tmpVal))
+                {
+                    WriteToLog("ReadCurrentValues не удалось выполнить getRecordValueByParam для " + tmpP);
+                    continue;
+                }
+
+                values[values.Count - 1] = tmpVal;
+            }
+
+            return true;
+        }
+
+
+        #endregion
+
         /// <summary>
         /// Открытие канала связи (отправкой SND_NKE)
         /// </summary>
@@ -818,6 +1009,51 @@ namespace WindowsFormsApplication1
                 else
                 {
                     WriteToLog("В ответе SND_NKE не найден подтверждающий байт 0xE5");
+                    return false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                WriteToLog("Ошибка при чтении серийного номера: " + ex.Message);
+                return false;
+            }
+        }
+
+
+        //Метод для совместимости с оболочкой. Также задает сетевой номер счетчика
+        public bool OpenLinkCanal(byte meterLocalNumber)
+        {
+            //SND_NKE
+            this.m_address = (uint)meterLocalNumber;
+            this.m_addr = meterLocalNumber;
+
+            byte cmd = 0x40;
+            byte CS = (byte)(cmd + m_addr);
+
+            byte[] cmdArr = { 0x10, cmd, m_addr, CS, 0x16 };
+            byte[] inp = new byte[256];
+
+            try
+            {
+                //режим, когда незнаем сколько байт нужно принять
+                m_vport.WriteReadData(findPackageSign, cmdArr, ref inp, cmdArr.Length, -1);
+
+                if (inp == null || inp.Length == 0)
+                {
+                    WriteToLog("Не получен ответ при чтении серийного номера");
+                    return false;
+                }
+
+                if (inp[inp.Length - 1] == 0xE5)
+                {
+                    return true;
+                }
+                else
+                {
+                    string infoStr = String.Format("В ответе SND_NKE не найден подтверждающий байт 0xE5.\nПолучены байты: [0];", BitConverter.ToString(inp, 0).Replace('-', ' '));
+                    WriteToLog(infoStr);
                     return false;
                 }
 

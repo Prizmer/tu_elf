@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+using ElfApatorCommonDriver;
+
 namespace WindowsFormsApplication1
 {
     public partial class HelpUtilsForm : Form
