@@ -78,6 +78,13 @@
             this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btnWriteInpulsePrise = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.btnWriteImpInpVal = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.apatorBtn)).BeginInit();
@@ -92,6 +99,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -102,7 +111,8 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1395, 29);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
+            this.menuStrip1.Size = new System.Drawing.Size(913, 24);
             this.menuStrip1.TabIndex = 23;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -111,13 +121,13 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.closeToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(63, 25);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(45, 22);
             this.fileToolStripMenuItem.Text = "Файл";
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.closeToolStripMenuItem.Text = "Выход";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -126,20 +136,20 @@
             this.toolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.encryptorCRC8ToolStripMenuItem});
             this.toolToolStripMenuItem.Name = "toolToolStripMenuItem";
-            this.toolToolStripMenuItem.Size = new System.Drawing.Size(126, 25);
+            this.toolToolStripMenuItem.Size = new System.Drawing.Size(87, 22);
             this.toolToolStripMenuItem.Text = "Инструменты";
             // 
             // encryptorCRC8ToolStripMenuItem
             // 
             this.encryptorCRC8ToolStripMenuItem.Name = "encryptorCRC8ToolStripMenuItem";
-            this.encryptorCRC8ToolStripMenuItem.Size = new System.Drawing.Size(223, 26);
+            this.encryptorCRC8ToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.encryptorCRC8ToolStripMenuItem.Text = "Шифратор и CRC8";
             this.encryptorCRC8ToolStripMenuItem.Click += new System.EventHandler(this.encryptorCRC8ToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(123, 25);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.aboutToolStripMenuItem.Text = "О программе";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -147,9 +157,10 @@
             // 
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Default;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(0, 32);
+            this.pictureBox1.Location = new System.Drawing.Point(0, 21);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(567, 538);
+            this.pictureBox1.Size = new System.Drawing.Size(378, 350);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 24;
             this.pictureBox1.TabStop = false;
@@ -159,11 +170,12 @@
             this.apatorScreen.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.apatorScreen.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.apatorScreen.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.apatorScreen.Location = new System.Drawing.Point(158, 253);
+            this.apatorScreen.Location = new System.Drawing.Point(105, 164);
+            this.apatorScreen.Margin = new System.Windows.Forms.Padding(2);
             this.apatorScreen.Name = "apatorScreen";
             this.apatorScreen.ReadOnly = true;
             this.apatorScreen.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.apatorScreen.Size = new System.Drawing.Size(229, 125);
+            this.apatorScreen.Size = new System.Drawing.Size(153, 81);
             this.apatorScreen.TabIndex = 25;
             this.apatorScreen.Text = "Приветствие!";
             // 
@@ -173,9 +185,10 @@
             this.apatorBtn.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("apatorBtn.BackgroundImage")));
             this.apatorBtn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.apatorBtn.Image = ((System.Drawing.Image)(resources.GetObject("apatorBtn.Image")));
-            this.apatorBtn.Location = new System.Drawing.Point(261, 424);
+            this.apatorBtn.Location = new System.Drawing.Point(174, 276);
+            this.apatorBtn.Margin = new System.Windows.Forms.Padding(2);
             this.apatorBtn.Name = "apatorBtn";
-            this.apatorBtn.Size = new System.Drawing.Size(24, 22);
+            this.apatorBtn.Size = new System.Drawing.Size(16, 14);
             this.apatorBtn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.apatorBtn.TabIndex = 26;
             this.apatorBtn.TabStop = false;
@@ -188,18 +201,21 @@
             this.groupBox1.Controls.Add(this.byIdBtn);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.numericUpDown1);
-            this.groupBox1.Location = new System.Drawing.Point(986, 310);
+            this.groupBox1.Location = new System.Drawing.Point(657, 201);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(399, 70);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(266, 45);
             this.groupBox1.TabIndex = 31;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Архив записей (РТ протокол)";
             // 
             // infoBtn
             // 
-            this.infoBtn.Location = new System.Drawing.Point(299, 25);
+            this.infoBtn.Location = new System.Drawing.Point(199, 16);
+            this.infoBtn.Margin = new System.Windows.Forms.Padding(2);
             this.infoBtn.Name = "infoBtn";
-            this.infoBtn.Size = new System.Drawing.Size(81, 31);
+            this.infoBtn.Size = new System.Drawing.Size(54, 20);
             this.infoBtn.TabIndex = 24;
             this.infoBtn.Text = "Инфо";
             this.infoBtn.UseVisualStyleBackColor = true;
@@ -207,9 +223,10 @@
             // 
             // lastRecBtn
             // 
-            this.lastRecBtn.Location = new System.Drawing.Point(181, 26);
+            this.lastRecBtn.Location = new System.Drawing.Point(121, 17);
+            this.lastRecBtn.Margin = new System.Windows.Forms.Padding(2);
             this.lastRecBtn.Name = "lastRecBtn";
-            this.lastRecBtn.Size = new System.Drawing.Size(112, 31);
+            this.lastRecBtn.Size = new System.Drawing.Size(75, 20);
             this.lastRecBtn.TabIndex = 23;
             this.lastRecBtn.Text = "Последняя";
             this.lastRecBtn.UseVisualStyleBackColor = true;
@@ -217,9 +234,10 @@
             // 
             // byIdBtn
             // 
-            this.byIdBtn.Location = new System.Drawing.Point(92, 27);
+            this.byIdBtn.Location = new System.Drawing.Point(61, 18);
+            this.byIdBtn.Margin = new System.Windows.Forms.Padding(2);
             this.byIdBtn.Name = "byIdBtn";
-            this.byIdBtn.Size = new System.Drawing.Size(83, 30);
+            this.byIdBtn.Size = new System.Drawing.Size(55, 19);
             this.byIdBtn.TabIndex = 22;
             this.byIdBtn.Text = "По ID";
             this.byIdBtn.UseVisualStyleBackColor = true;
@@ -228,21 +246,23 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 31);
+            this.label2.Location = new System.Drawing.Point(4, 20);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(0, 20);
+            this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 21;
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(12, 29);
+            this.numericUpDown1.Location = new System.Drawing.Point(8, 19);
+            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(74, 26);
+            this.numericUpDown1.Size = new System.Drawing.Size(51, 20);
             this.numericUpDown1.TabIndex = 20;
             // 
             // groupBox2
@@ -251,18 +271,21 @@
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.reqUd2_btn);
-            this.groupBox2.Location = new System.Drawing.Point(581, 308);
+            this.groupBox2.Location = new System.Drawing.Point(387, 200);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(399, 72);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Size = new System.Drawing.Size(266, 47);
             this.groupBox2.TabIndex = 32;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "MBUS";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(282, 24);
+            this.button3.Location = new System.Drawing.Point(188, 16);
+            this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(98, 33);
+            this.button3.Size = new System.Drawing.Size(65, 21);
             this.button3.TabIndex = 13;
             this.button3.Text = "Считать";
             this.button3.UseVisualStyleBackColor = true;
@@ -270,9 +293,10 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(75, 24);
+            this.button2.Location = new System.Drawing.Point(50, 16);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(49, 33);
+            this.button2.Size = new System.Drawing.Size(33, 21);
             this.button2.TabIndex = 12;
             this.button2.Text = "FN";
             this.button2.UseVisualStyleBackColor = true;
@@ -280,9 +304,10 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 24);
+            this.button1.Location = new System.Drawing.Point(8, 16);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(57, 33);
+            this.button1.Size = new System.Drawing.Size(38, 21);
             this.button1.TabIndex = 11;
             this.button1.Text = "OLC";
             this.button1.UseVisualStyleBackColor = true;
@@ -290,9 +315,10 @@
             // 
             // reqUd2_btn
             // 
-            this.reqUd2_btn.Location = new System.Drawing.Point(130, 24);
+            this.reqUd2_btn.Location = new System.Drawing.Point(87, 16);
+            this.reqUd2_btn.Margin = new System.Windows.Forms.Padding(2);
             this.reqUd2_btn.Name = "reqUd2_btn";
-            this.reqUd2_btn.Size = new System.Drawing.Size(115, 33);
+            this.reqUd2_btn.Size = new System.Drawing.Size(77, 21);
             this.reqUd2_btn.TabIndex = 10;
             this.reqUd2_btn.Text = "REQ_UD2";
             this.reqUd2_btn.UseVisualStyleBackColor = true;
@@ -310,45 +336,52 @@
             this.groupBox3.Controls.Add(this.radioButton1);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.addressCmbBox);
-            this.groupBox3.Location = new System.Drawing.Point(581, 32);
+            this.groupBox3.Location = new System.Drawing.Point(387, 21);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(399, 270);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Size = new System.Drawing.Size(266, 175);
             this.groupBox3.TabIndex = 33;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Параметры соединения";
+            this.groupBox3.Enter += new System.EventHandler(this.groupBox3_Enter);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(248, 205);
+            this.label7.Location = new System.Drawing.Point(165, 133);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(35, 20);
+            this.label7.Size = new System.Drawing.Size(25, 13);
             this.label7.TabIndex = 38;
             this.label7.Text = "dec";
             // 
             // addressDecCmb
             // 
             this.addressDecCmb.FormattingEnabled = true;
-            this.addressDecCmb.Location = new System.Drawing.Point(233, 228);
+            this.addressDecCmb.Location = new System.Drawing.Point(155, 148);
+            this.addressDecCmb.Margin = new System.Windows.Forms.Padding(2);
             this.addressDecCmb.Name = "addressDecCmb";
-            this.addressDecCmb.Size = new System.Drawing.Size(85, 28);
+            this.addressDecCmb.Size = new System.Drawing.Size(58, 21);
             this.addressDecCmb.TabIndex = 37;
             this.addressDecCmb.TextChanged += new System.EventHandler(this.addressDecCmb_TextChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(161, 205);
+            this.label6.Location = new System.Drawing.Point(107, 133);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(34, 20);
+            this.label6.Size = new System.Drawing.Size(24, 13);
             this.label6.TabIndex = 36;
             this.label6.Text = "hex";
             // 
             // portSettingsApplyBtn
             // 
-            this.portSettingsApplyBtn.Location = new System.Drawing.Point(327, 224);
+            this.portSettingsApplyBtn.Location = new System.Drawing.Point(218, 146);
+            this.portSettingsApplyBtn.Margin = new System.Windows.Forms.Padding(2);
             this.portSettingsApplyBtn.Name = "portSettingsApplyBtn";
-            this.portSettingsApplyBtn.Size = new System.Drawing.Size(53, 34);
+            this.portSettingsApplyBtn.Size = new System.Drawing.Size(35, 22);
             this.portSettingsApplyBtn.TabIndex = 35;
             this.portSettingsApplyBtn.Text = "ОК";
             this.portSettingsApplyBtn.UseVisualStyleBackColor = true;
@@ -359,25 +392,27 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.textBox2);
             this.panel2.Controls.Add(this.textBox1);
-            this.panel2.Enabled = false;
-            this.panel2.Location = new System.Drawing.Point(35, 144);
+            this.panel2.Location = new System.Drawing.Point(23, 94);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(345, 50);
+            this.panel2.Size = new System.Drawing.Size(231, 33);
             this.panel2.TabIndex = 34;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(246, 12);
+            this.textBox2.Location = new System.Drawing.Point(164, 8);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(2);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(92, 26);
+            this.textBox2.Size = new System.Drawing.Size(63, 20);
             this.textBox2.TabIndex = 1;
             this.textBox2.Text = "5002";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(15, 12);
+            this.textBox1.Location = new System.Drawing.Point(10, 8);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(218, 26);
+            this.textBox1.Size = new System.Drawing.Size(147, 20);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = "172.40.40.240";
             // 
@@ -386,14 +421,16 @@
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.numericUpDown4);
             this.panel1.Controls.Add(this.portCmbBox);
-            this.panel1.Location = new System.Drawing.Point(37, 55);
+            this.panel1.Location = new System.Drawing.Point(25, 36);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(343, 50);
+            this.panel1.Size = new System.Drawing.Size(229, 33);
             this.panel1.TabIndex = 33;
             // 
             // numericUpDown4
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(244, 11);
+            this.numericUpDown4.Location = new System.Drawing.Point(163, 7);
+            this.numericUpDown4.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown4.Maximum = new decimal(new int[] {
             3000,
             0,
@@ -405,7 +442,7 @@
             0,
             0});
             this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(92, 26);
+            this.numericUpDown4.Size = new System.Drawing.Size(63, 20);
             this.numericUpDown4.TabIndex = 31;
             this.toolTip1.SetToolTip(this.numericUpDown4, "Задержка чтения (Read Timeout)");
             this.numericUpDown4.Value = new decimal(new int[] {
@@ -417,18 +454,19 @@
             // portCmbBox
             // 
             this.portCmbBox.FormattingEnabled = true;
-            this.portCmbBox.Location = new System.Drawing.Point(13, 10);
+            this.portCmbBox.Location = new System.Drawing.Point(9, 6);
+            this.portCmbBox.Margin = new System.Windows.Forms.Padding(2);
             this.portCmbBox.Name = "portCmbBox";
-            this.portCmbBox.Size = new System.Drawing.Size(124, 28);
+            this.portCmbBox.Size = new System.Drawing.Size(84, 21);
             this.portCmbBox.TabIndex = 30;
             // 
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
-            this.radioButton2.Enabled = false;
-            this.radioButton2.Location = new System.Drawing.Point(10, 114);
+            this.radioButton2.Location = new System.Drawing.Point(7, 74);
+            this.radioButton2.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(82, 24);
+            this.radioButton2.Size = new System.Drawing.Size(61, 17);
             this.radioButton2.TabIndex = 32;
             this.radioButton2.Tag = "rb_tcp";
             this.radioButton2.Text = "TCP/IP";
@@ -438,9 +476,10 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(12, 25);
+            this.radioButton1.Location = new System.Drawing.Point(8, 16);
+            this.radioButton1.Margin = new System.Windows.Forms.Padding(2);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(69, 24);
+            this.radioButton1.Size = new System.Drawing.Size(49, 17);
             this.radioButton1.TabIndex = 31;
             this.radioButton1.Tag = "rb_com";
             this.radioButton1.Text = "COM";
@@ -450,18 +489,20 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 231);
+            this.label3.Location = new System.Drawing.Point(5, 150);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(128, 20);
+            this.label3.Size = new System.Drawing.Size(85, 13);
             this.label3.TabIndex = 30;
             this.label3.Text = "Сетевой адрес:";
             // 
             // addressCmbBox
             // 
             this.addressCmbBox.FormattingEnabled = true;
-            this.addressCmbBox.Location = new System.Drawing.Point(142, 228);
+            this.addressCmbBox.Location = new System.Drawing.Point(95, 148);
+            this.addressCmbBox.Margin = new System.Windows.Forms.Padding(2);
             this.addressCmbBox.Name = "addressCmbBox";
-            this.addressCmbBox.Size = new System.Drawing.Size(85, 28);
+            this.addressCmbBox.Size = new System.Drawing.Size(58, 21);
             this.addressCmbBox.TabIndex = 29;
             this.addressCmbBox.TextChanged += new System.EventHandler(this.addressCmbBox_TextChanged);
             // 
@@ -475,18 +516,21 @@
             this.groupBox4.Controls.Add(this.readDailyBtn);
             this.groupBox4.Controls.Add(this.dateTimePicker1);
             this.groupBox4.Controls.Add(this.label1);
-            this.groupBox4.Location = new System.Drawing.Point(986, 32);
+            this.groupBox4.Location = new System.Drawing.Point(657, 21);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(399, 115);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox4.Size = new System.Drawing.Size(266, 75);
             this.groupBox4.TabIndex = 32;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Тест функций СО";
             // 
             // readCurBtn
             // 
-            this.readCurBtn.Location = new System.Drawing.Point(263, 63);
+            this.readCurBtn.Location = new System.Drawing.Point(175, 41);
+            this.readCurBtn.Margin = new System.Windows.Forms.Padding(2);
             this.readCurBtn.Name = "readCurBtn";
-            this.readCurBtn.Size = new System.Drawing.Size(111, 27);
+            this.readCurBtn.Size = new System.Drawing.Size(74, 18);
             this.readCurBtn.TabIndex = 28;
             this.readCurBtn.Text = "Текущие";
             this.readCurBtn.UseVisualStyleBackColor = true;
@@ -495,43 +539,47 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(191, 27);
+            this.label5.Location = new System.Drawing.Point(127, 18);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(60, 20);
+            this.label5.Size = new System.Drawing.Size(41, 13);
             this.label5.TabIndex = 27;
             this.label5.Text = "Канал:";
             // 
             // numericUpDown3
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(262, 25);
+            this.numericUpDown3.Location = new System.Drawing.Point(175, 16);
+            this.numericUpDown3.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             200,
             0,
             0,
             0});
             this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(76, 26);
+            this.numericUpDown3.Size = new System.Drawing.Size(52, 20);
             this.numericUpDown3.TabIndex = 26;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 27);
+            this.label4.Location = new System.Drawing.Point(8, 18);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(61, 20);
+            this.label4.Size = new System.Drawing.Size(41, 13);
             this.label4.TabIndex = 25;
             this.label4.Text = "Адрес:";
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(79, 25);
+            this.numericUpDown2.Location = new System.Drawing.Point(53, 16);
+            this.numericUpDown2.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             200,
             0,
             0,
             0});
             this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(76, 26);
+            this.numericUpDown2.Size = new System.Drawing.Size(52, 20);
             this.numericUpDown2.TabIndex = 24;
             this.numericUpDown2.Value = new decimal(new int[] {
             1,
@@ -541,9 +589,10 @@
             // 
             // readDailyBtn
             // 
-            this.readDailyBtn.Location = new System.Drawing.Point(146, 63);
+            this.readDailyBtn.Location = new System.Drawing.Point(97, 41);
+            this.readDailyBtn.Margin = new System.Windows.Forms.Padding(2);
             this.readDailyBtn.Name = "readDailyBtn";
-            this.readDailyBtn.Size = new System.Drawing.Size(111, 27);
+            this.readDailyBtn.Size = new System.Drawing.Size(74, 18);
             this.readDailyBtn.TabIndex = 23;
             this.readDailyBtn.Text = "Суточные";
             this.readDailyBtn.UseVisualStyleBackColor = true;
@@ -552,24 +601,27 @@
             // dateTimePicker1
             // 
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker1.Location = new System.Drawing.Point(16, 64);
+            this.dateTimePicker1.Location = new System.Drawing.Point(11, 42);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(124, 26);
+            this.dateTimePicker1.Size = new System.Drawing.Size(84, 20);
             this.dateTimePicker1.TabIndex = 22;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 31);
+            this.label1.Location = new System.Drawing.Point(4, 20);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 20);
+            this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 21;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(984, 489);
+            this.button4.Location = new System.Drawing.Point(422, 294);
+            this.button4.Margin = new System.Windows.Forms.Padding(2);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 26);
+            this.button4.Size = new System.Drawing.Size(50, 17);
             this.button4.TabIndex = 36;
             this.button4.Text = "button4";
             this.button4.UseVisualStyleBackColor = true;
@@ -577,30 +629,115 @@
             // 
             // numericUpDown5
             // 
-            this.numericUpDown5.Location = new System.Drawing.Point(746, 489);
+            this.numericUpDown5.Location = new System.Drawing.Point(437, 334);
+            this.numericUpDown5.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown5.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
             this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(120, 26);
+            this.numericUpDown5.Size = new System.Drawing.Size(81, 20);
             this.numericUpDown5.TabIndex = 37;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(873, 489);
+            this.label8.Location = new System.Drawing.Point(522, 334);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(51, 20);
+            this.label8.Size = new System.Drawing.Size(35, 13);
             this.label8.TabIndex = 38;
             this.label8.Text = "label8";
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.btnWriteInpulsePrise);
+            this.groupBox5.Controls.Add(this.label10);
+            this.groupBox5.Controls.Add(this.label9);
+            this.groupBox5.Controls.Add(this.numericUpDown6);
+            this.groupBox5.Controls.Add(this.textBox3);
+            this.groupBox5.Controls.Add(this.btnWriteImpInpVal);
+            this.groupBox5.Location = new System.Drawing.Point(657, 254);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(253, 112);
+            this.groupBox5.TabIndex = 40;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Предустановка значений имп. входов";
+            // 
+            // btnWriteInpulsePrise
+            // 
+            this.btnWriteInpulsePrise.Location = new System.Drawing.Point(128, 68);
+            this.btnWriteInpulsePrise.Name = "btnWriteInpulsePrise";
+            this.btnWriteInpulsePrise.Size = new System.Drawing.Size(116, 25);
+            this.btnWriteInpulsePrise.TabIndex = 45;
+            this.btnWriteInpulsePrise.Text = "Записать цену имп.";
+            this.btnWriteInpulsePrise.UseVisualStyleBackColor = true;
+            this.btnWriteInpulsePrise.Click += new System.EventHandler(this.btnWriteInpulsePrise_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(8, 19);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(58, 13);
+            this.label10.TabIndex = 44;
+            this.label10.Text = "Значение:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(8, 42);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(64, 13);
+            this.label9.TabIndex = 43;
+            this.label9.Text = "Имп. вход: ";
+            // 
+            // numericUpDown6
+            // 
+            this.numericUpDown6.Location = new System.Drawing.Point(196, 37);
+            this.numericUpDown6.Maximum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDown6.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown6.Name = "numericUpDown6";
+            this.numericUpDown6.Size = new System.Drawing.Size(48, 20);
+            this.numericUpDown6.TabIndex = 42;
+            this.numericUpDown6.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(76, 16);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(168, 20);
+            this.textBox3.TabIndex = 41;
+            // 
+            // btnWriteImpInpVal
+            // 
+            this.btnWriteImpInpVal.Location = new System.Drawing.Point(11, 68);
+            this.btnWriteImpInpVal.Name = "btnWriteImpInpVal";
+            this.btnWriteImpInpVal.Size = new System.Drawing.Size(116, 25);
+            this.btnWriteImpInpVal.TabIndex = 40;
+            this.btnWriteImpInpVal.Text = "Записать значение";
+            this.btnWriteImpInpVal.UseVisualStyleBackColor = true;
+            this.btnWriteImpInpVal.Click += new System.EventHandler(this.btnWriteImpInpVal_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1395, 582);
+            this.ClientSize = new System.Drawing.Size(913, 378);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.numericUpDown5);
             this.Controls.Add(this.button4);
@@ -614,6 +751,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "ElfApator - тестовая утилита";
@@ -638,6 +776,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -693,6 +834,13 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.NumericUpDown numericUpDown5;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button btnWriteInpulsePrise;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numericUpDown6;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Button btnWriteImpInpVal;
     }
 }
 

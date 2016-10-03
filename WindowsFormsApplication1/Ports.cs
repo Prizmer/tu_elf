@@ -47,7 +47,7 @@ namespace Prizmer.Ports
 
         public void closePort()
         {
-           
+            return;
         }
 
         public void Write(byte[] m_cmd, int leng)
@@ -146,6 +146,19 @@ namespace Prizmer.Ports
                                                 }
                                             }
                                         }
+
+                                        if (target_in_length == -1)
+                                        {
+                                            target_in_length = reading_queue.Count;
+                                            reading_size = target_in_length;
+                                            in_buffer = new byte[reading_size];
+
+                                            for (int i = 0; i < in_buffer.Length; i++)
+                                                in_buffer[i] = temp_buffer[i];
+
+                                            return reading_size;
+                                        }
+
                                     }
                                 }
                             }
@@ -179,6 +192,9 @@ namespace Prizmer.Ports
             {
             }
         }
+
+
+
     }
 
     public sealed class ComPort : VirtualPort, IDisposable
@@ -495,7 +511,7 @@ namespace Prizmer.Ports
 
 
                 /*TODO: Откуда взялась константа 4, почему 4?*/
-                if (readBytesList.Count >= 4)
+                if (readBytesList.Count > 0)
                 {
                     /*попытаемся определить начало полезных данных в буфере-на-вход
                         при помощи связанного делегата*/

@@ -444,5 +444,20 @@ namespace WindowsFormsApplication1
             label8.Text = addr.ToString();
         }
 
+        private void btnWriteImpInpVal_Click(object sender, EventArgs e)
+        {
+            Meter.ChangeImpulseInputDefaultValue((int)numericUpDown6.Value, int.Parse(textBox3.Text));
+        }
+
+        private void btnWriteInpulsePrise_Click(object sender, EventArgs e)
+        {
+            Meter.ChangeImpulseInputsValPrice(int.Parse(textBox3.Text), int.Parse(textBox3.Text));
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
