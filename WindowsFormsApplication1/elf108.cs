@@ -10,6 +10,8 @@ using Prizmer.Ports;
 
 namespace WindowsFormsApplication1
 {
+  
+
     public class elf108 : Prizmer.Meters.CMeter
     {
         public void Init(uint address, string pass, VirtualPort vp)
@@ -17,6 +19,14 @@ namespace WindowsFormsApplication1
             this.m_address = address;
             this.m_addr = (byte)(this.m_address & 0x000000ff);
             this.m_vport = vp;
+        }
+
+        static string GetStringFromByteArray(byte[] arr)
+        {
+            string answ_str = "";
+            foreach (byte b in arr)
+                answ_str += Convert.ToString(b, 16) + " ";
+            return answ_str;
         }
 
         private byte m_addr = 0x0;
@@ -402,10 +412,7 @@ namespace WindowsFormsApplication1
                 //режим, когда незнаем сколько байт нужно принять
                 m_vport.WriteReadData(findPackageSign, cmdArr, ref inp, cmdArr.Length, -1);
 
-                string answ_str = "";
-                foreach (byte b in inp)
-                    answ_str += Convert.ToString(b, 16) + " ";
-                WriteToLog(answ_str);
+                WriteToLog(GetStringFromByteArray(inp));
 
                 //if (inp.Length < 6)
                 //{
@@ -571,17 +578,28 @@ namespace WindowsFormsApplication1
 
             List<byte> data_arr_list = new List<byte>();
             data_arr_list.AddRange(data_arr);
+            WriteToLog("Received: " + GetStringFromByteArray(data_arr));
 
             //если начало правильное
-            if (data_arr_list[0] == 0x4d && data_arr_list[data_arr_list.Count - 1] == 0x16)
+
+            //все хорошо, служебная информация, обрабатывать (в этой версии) ничего не надо
+            if (data_arr_list[0] == 0x53 && data_arr_list[data_arr_list.Count - 1] == 0x16)
+            {
+                byte[] usefullDataArr = new byte[data_arr_list.Count - 2];
+                Array.Copy(data_arr, 1, usefullDataArr, 0, data_arr_list.Count - 2);
+                DecryptByteArr(usefullDataArr, ref usefullDataArr);
+                data_arr = usefullDataArr;
+                return true;
+            }
+            else if (data_arr_list[0] == 0x4d && data_arr_list[data_arr_list.Count - 1] == 0x16)
             {
                 //длина минимальной команды 6 байт
-                if (data_arr_list.Count < 6)
-                {
-                    data_arr = null;
-                    WriteToLog("SendPT01_CMD: корректный ответ не может быть меньше 6 байт по протоколу РТ");
-                    return false;
-                }
+                //if (data_arr_list.Count < 6)
+                //{
+                //    data_arr = null;
+                //    WriteToLog("SendPT01_CMD: корректный ответ не может быть меньше 6 байт по протоколу РТ");
+                //    return false;
+                //}
 
                 if (data_arr.Length == resCmd.Length)
                 {
@@ -977,10 +995,11 @@ namespace WindowsFormsApplication1
             byte[] data_arr = new byte[1];
             if (!SendPT01_CMD(cmd, ref data_arr, cmd_data)) return false;
 
+
             byte crc_check = CRC8(data_arr, data_arr.Length);
             if (crc_check != 0x0)
             {
-                WriteToLog("ReadLastArchiveVal: данные приняты неверно");
+                WriteToLog("ChangeImpulseInputDefaultValue: данные приняты неверно");
                 return false;
             }
 

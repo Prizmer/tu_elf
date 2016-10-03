@@ -269,13 +269,16 @@ namespace WindowsFormsApplication1
                     groupBox1.Enabled = true;
                     groupBox4.Enabled = true;
                     apatorBtn.Enabled = true;
+                    groupBox5.Enabled = true;
                 }
                 else
                 {
                     groupBox2.Enabled = false;
                     groupBox1.Enabled = false;
                     apatorBtn.Enabled = false;
-                    groupBox4.Enabled = false;                }
+                    groupBox4.Enabled = false;
+                    groupBox5.Enabled = false;
+                }
             }
         }
 
@@ -444,7 +447,15 @@ namespace WindowsFormsApplication1
 
         private void btnWriteImpInpVal_Click(object sender, EventArgs e)
         {
-            Meter.ChangeImpulseInputDefaultValue((int)numericUpDown6.Value, int.Parse(textBox3.Text));
+            clearScreen();  
+            if (Meter.ChangeImpulseInputDefaultValue((int)numericUpDown6.Value, int.Parse(textBox3.Text)))
+            {
+                addMessageToScreen("Данные обновлены");
+            }
+            else
+            {
+                addMessageToScreen("Ошибка");
+            }
         }
 
         private void btnWriteInpulsePrise_Click(object sender, EventArgs e)
@@ -455,6 +466,19 @@ namespace WindowsFormsApplication1
         private void groupBox3_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+       
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.R && groupBox2.Enabled == true)
+            {
+                button3.PerformClick();
+            }
         }
 
     }

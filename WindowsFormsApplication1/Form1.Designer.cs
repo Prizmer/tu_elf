@@ -114,7 +114,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
-            this.menuStrip1.Size = new System.Drawing.Size(913, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(970, 24);
             this.menuStrip1.TabIndex = 23;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -162,7 +162,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(0, 21);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(378, 350);
+            this.pictureBox1.Size = new System.Drawing.Size(367, 350);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 24;
             this.pictureBox1.TabStop = false;
@@ -172,12 +172,12 @@
             this.apatorScreen.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.apatorScreen.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.apatorScreen.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.apatorScreen.Location = new System.Drawing.Point(105, 164);
+            this.apatorScreen.Location = new System.Drawing.Point(101, 128);
             this.apatorScreen.Margin = new System.Windows.Forms.Padding(2);
             this.apatorScreen.Name = "apatorScreen";
             this.apatorScreen.ReadOnly = true;
             this.apatorScreen.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.apatorScreen.Size = new System.Drawing.Size(153, 81);
+            this.apatorScreen.Size = new System.Drawing.Size(152, 143);
             this.apatorScreen.TabIndex = 25;
             this.apatorScreen.Text = "Приветствие!";
             // 
@@ -203,7 +203,7 @@
             this.groupBox1.Controls.Add(this.byIdBtn);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.numericUpDown1);
-            this.groupBox1.Location = new System.Drawing.Point(657, 201);
+            this.groupBox1.Location = new System.Drawing.Point(632, 103);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
@@ -273,56 +273,64 @@
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.reqUd2_btn);
-            this.groupBox2.Location = new System.Drawing.Point(387, 254);
+            this.groupBox2.Location = new System.Drawing.Point(366, 254);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox2.Size = new System.Drawing.Size(266, 47);
+            this.groupBox2.Size = new System.Drawing.Size(262, 47);
             this.groupBox2.TabIndex = 32;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "MBUS";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(188, 16);
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Location = new System.Drawing.Point(168, 16);
             this.button3.Margin = new System.Windows.Forms.Padding(2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(65, 21);
+            this.button3.Size = new System.Drawing.Size(86, 21);
             this.button3.TabIndex = 13;
             this.button3.Text = "Считать";
+            this.toolTip1.SetToolTip(this.button3, "Прочитать и разобрать данные (CTRL + R)");
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(50, 16);
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Location = new System.Drawing.Point(45, 16);
             this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(33, 21);
             this.button2.TabIndex = 12;
-            this.button2.Text = "FN";
+            this.button2.Text = "SN";
+            this.toolTip1.SetToolTip(this.button2, "Прочитать серийный номер");
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Location = new System.Drawing.Point(8, 16);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(38, 21);
             this.button1.TabIndex = 11;
             this.button1.Text = "OLC";
+            this.toolTip1.SetToolTip(this.button1, "Открыть канал связи");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // reqUd2_btn
             // 
-            this.reqUd2_btn.Location = new System.Drawing.Point(87, 16);
+            this.reqUd2_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.reqUd2_btn.Location = new System.Drawing.Point(77, 16);
             this.reqUd2_btn.Margin = new System.Windows.Forms.Padding(2);
             this.reqUd2_btn.Name = "reqUd2_btn";
             this.reqUd2_btn.Size = new System.Drawing.Size(77, 21);
             this.reqUd2_btn.TabIndex = 10;
             this.reqUd2_btn.Text = "REQ_UD2";
+            this.toolTip1.SetToolTip(this.reqUd2_btn, "Получить байты ответа");
             this.reqUd2_btn.UseVisualStyleBackColor = true;
             this.reqUd2_btn.Click += new System.EventHandler(this.reqUd2_btn_Click);
             // 
@@ -339,11 +347,11 @@
             this.groupBox3.Controls.Add(this.radioButton1);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.addressCmbBox);
-            this.groupBox3.Location = new System.Drawing.Point(387, 21);
+            this.groupBox3.Location = new System.Drawing.Point(366, 24);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Size = new System.Drawing.Size(266, 225);
+            this.groupBox3.Size = new System.Drawing.Size(262, 225);
             this.groupBox3.TabIndex = 33;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Параметры соединения";
@@ -408,7 +416,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(63, 20);
             this.textBox2.TabIndex = 1;
-            this.textBox2.Text = "2001";
+            this.textBox2.Text = "4002";
             // 
             // textBox1
             // 
@@ -417,7 +425,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(147, 20);
             this.textBox1.TabIndex = 0;
-            this.textBox1.Text = "192.168.23.54";
+            this.textBox1.Text = "192.168.23.53";
             // 
             // panel1
             // 
@@ -519,7 +527,7 @@
             this.groupBox4.Controls.Add(this.readDailyBtn);
             this.groupBox4.Controls.Add(this.dateTimePicker1);
             this.groupBox4.Controls.Add(this.label1);
-            this.groupBox4.Location = new System.Drawing.Point(657, 21);
+            this.groupBox4.Location = new System.Drawing.Point(632, 24);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
@@ -533,7 +541,7 @@
             this.readCurBtn.Location = new System.Drawing.Point(175, 41);
             this.readCurBtn.Margin = new System.Windows.Forms.Padding(2);
             this.readCurBtn.Name = "readCurBtn";
-            this.readCurBtn.Size = new System.Drawing.Size(74, 18);
+            this.readCurBtn.Size = new System.Drawing.Size(74, 23);
             this.readCurBtn.TabIndex = 28;
             this.readCurBtn.Text = "Текущие";
             this.readCurBtn.UseVisualStyleBackColor = true;
@@ -542,7 +550,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(127, 18);
+            this.label5.Location = new System.Drawing.Point(109, 18);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 13);
@@ -551,7 +559,7 @@
             // 
             // numericUpDown3
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(175, 16);
+            this.numericUpDown3.Location = new System.Drawing.Point(154, 16);
             this.numericUpDown3.Margin = new System.Windows.Forms.Padding(2);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             200,
@@ -595,7 +603,7 @@
             this.readDailyBtn.Location = new System.Drawing.Point(97, 41);
             this.readDailyBtn.Margin = new System.Windows.Forms.Padding(2);
             this.readDailyBtn.Name = "readDailyBtn";
-            this.readDailyBtn.Size = new System.Drawing.Size(74, 18);
+            this.readDailyBtn.Size = new System.Drawing.Size(74, 23);
             this.readDailyBtn.TabIndex = 23;
             this.readDailyBtn.Text = "Суточные";
             this.readDailyBtn.UseVisualStyleBackColor = true;
@@ -604,7 +612,7 @@
             // dateTimePicker1
             // 
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker1.Location = new System.Drawing.Point(11, 42);
+            this.dateTimePicker1.Location = new System.Drawing.Point(9, 44);
             this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(84, 20);
@@ -627,16 +635,17 @@
             this.groupBox5.Controls.Add(this.numericUpDown6);
             this.groupBox5.Controls.Add(this.textBox3);
             this.groupBox5.Controls.Add(this.btnWriteImpInpVal);
-            this.groupBox5.Location = new System.Drawing.Point(657, 254);
+            this.groupBox5.Location = new System.Drawing.Point(633, 153);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(253, 112);
+            this.groupBox5.Size = new System.Drawing.Size(253, 77);
             this.groupBox5.TabIndex = 40;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Предустановка значений имп. входов";
             // 
             // btnWriteInpulsePrise
             // 
-            this.btnWriteInpulsePrise.Location = new System.Drawing.Point(128, 68);
+            this.btnWriteInpulsePrise.Enabled = false;
+            this.btnWriteInpulsePrise.Location = new System.Drawing.Point(131, 44);
             this.btnWriteInpulsePrise.Name = "btnWriteInpulsePrise";
             this.btnWriteInpulsePrise.Size = new System.Drawing.Size(116, 25);
             this.btnWriteInpulsePrise.TabIndex = 45;
@@ -647,7 +656,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(8, 19);
+            this.label10.Location = new System.Drawing.Point(131, 20);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(58, 13);
             this.label10.TabIndex = 44;
@@ -656,7 +665,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 42);
+            this.label9.Location = new System.Drawing.Point(9, 20);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(64, 13);
             this.label9.TabIndex = 43;
@@ -664,7 +673,7 @@
             // 
             // numericUpDown6
             // 
-            this.numericUpDown6.Location = new System.Drawing.Point(196, 37);
+            this.numericUpDown6.Location = new System.Drawing.Point(73, 17);
             this.numericUpDown6.Maximum = new decimal(new int[] {
             4,
             0,
@@ -686,14 +695,17 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(76, 16);
+            this.textBox3.Location = new System.Drawing.Point(189, 17);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(168, 20);
+            this.textBox3.Size = new System.Drawing.Size(55, 20);
             this.textBox3.TabIndex = 41;
+            this.textBox3.Text = "0";
+            this.toolTip1.SetToolTip(this.textBox3, "Задается в импульсах. Программа при считывании переводит значения в м3, поэтому н" +
+        "ужно вводить значение домноженное на цену имп.");
             // 
             // btnWriteImpInpVal
             // 
-            this.btnWriteImpInpVal.Location = new System.Drawing.Point(11, 68);
+            this.btnWriteImpInpVal.Location = new System.Drawing.Point(11, 44);
             this.btnWriteImpInpVal.Name = "btnWriteImpInpVal";
             this.btnWriteImpInpVal.Size = new System.Drawing.Size(116, 25);
             this.btnWriteImpInpVal.TabIndex = 40;
@@ -741,6 +753,7 @@
             this.textBox6.Size = new System.Drawing.Size(46, 20);
             this.textBox6.TabIndex = 55;
             this.textBox6.Text = "10";
+            this.toolTip1.SetToolTip(this.textBox6, "Таймаут задержки между посылками. В данной версии не играет роли.");
             // 
             // textBox4
             // 
@@ -749,12 +762,13 @@
             this.textBox4.Size = new System.Drawing.Size(46, 20);
             this.textBox4.TabIndex = 53;
             this.textBox4.Text = "100";
+            this.toolTip1.SetToolTip(this.textBox4, "Таймаут записи. В данной версии не играет роли.");
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(913, 378);
+            this.ClientSize = new System.Drawing.Size(970, 378);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -765,6 +779,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
@@ -772,6 +787,8 @@
             this.Text = "ElfApator - тестовая утилита";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
