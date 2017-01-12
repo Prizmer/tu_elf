@@ -88,7 +88,7 @@ namespace Prizmer.Ports
 
                 try
                 {
-                    //WriteToLog("IpLocalEndp: " + ipLocalEndpoint.ToString() + ";  Remote: " + remoteEndPoint.ToString() );
+                    WriteToLog("IpLocalEndp: " + ipLocalEndpoint.ToString() + ";  Remote: " + remoteEndPoint.ToString() );
 
                     sender.Bind(ipLocalEndpoint);
                     sender.Connect(remoteEndPoint);
@@ -288,13 +288,13 @@ namespace Prizmer.Ports
             if (ts.TotalMinutes >= tcpAliveMinutes)
             {
                 //погружаемся в сон на 5 минут, чтобы "дать отдохнуть" принимающим устройствам
-                WriteToLog("WriteReadData: погружаемся в сон на 5 минут, чтобы дать отдохнуть принимающим устройствам");
+                //WriteToLog("WriteReadData: погружаемся в сон на 5 секунд, чтобы дать отдохнуть принимающим устройствам");
                 if (sender != null && sender.Connected) sender.Close();
-                Thread.Sleep(1000 * 60 * 5);
+                Thread.Sleep(1000 * 5);
                 dtCreated = DateTime.Now;
 
                 ReInitialize();
-                WriteToLog("WriteReadData: открыт новый сокет после сна: " + sender.LocalEndPoint.ToString());
+                //WriteToLog("WriteReadData: открыт новый сокет после сна: " + sender.LocalEndPoint.ToString());
             }
 
             List<byte> readBytesList = new List<byte>(8192);
@@ -333,7 +333,7 @@ namespace Prizmer.Ports
                             Thread.Sleep(100);
                         }
 
-                        WriteToLog("WriteReadData: before manageupWithBytes, readBytesList.Count: " + readBytesList.Count);
+                        //WriteToLog("WriteReadData: before manageupWithBytes, readBytesList.Count: " + readBytesList.Count);
 
                         bool bManageRes = ManageUpWithReceivedBytes(readBytesList, func, target_in_length, out in_buffer, out readingSize,
                             pos_count_data_size, size_data, header_size);
