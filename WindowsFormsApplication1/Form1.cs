@@ -75,11 +75,7 @@ namespace WindowsFormsApplication1
             m_Port.DtrEnable = true;
             m_Port.RtsEnable = true;
              * */
-            if (vp != null)
-            {
-                vp.closePort();
-                vp = null;
-            }
+
             vp = new ComPort(byte.Parse(portName.Remove(0, 3)), 2400, 8, 2, 1, 0, (ushort)numericUpDown4.Value, 1);
         }
 
@@ -306,10 +302,7 @@ namespace WindowsFormsApplication1
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (vp != null)
-            {
-                vp.closePort();
-            }
+
         }
 
 

@@ -8,9 +8,6 @@ using System.IO;
 using System.IO.Ports;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.NetworkInformation;
-
-using System.Configuration;
 
 namespace Prizmer.Ports
 {
@@ -20,10 +17,9 @@ namespace Prizmer.Ports
     {
         int WriteReadData(FindPacketSignature func, byte[] out_buffer, ref byte[] in_buffer, int out_length, int target_in_length, uint pos_count_data_size = 0, uint size_data = 0, uint header_size = 0);
         string GetName();
-
-        string GetConnectionType();
-        bool ReInitialize();
-        bool GetLocalEndPoint(ref IPEndPoint localEp);
+        void closePort();
+        /*void Write(byte[] m_cmd, int leng);
+        int Read(ref byte[] data);*/
     }
 
     public sealed class TcpipPort : VirtualPort
@@ -38,19 +34,8 @@ namespace Prizmer.Ports
         {
             return "tcp" + m_address + "_" + m_port;
         }
-
-        ~TcpipPort()
-        {
-            if (sender != null)
-                sender.Close();
-        }
         
-        IPAddress ipLocalAddr = null;
-        IPEndPoint ipLocalEndpoint = null;
-        IPEndPoint remoteEndPoint = null;
-        Socket sender = null;
 
-        DateTime dtCreated = DateTime.Now;
 
         public TcpipPort(string address, int port, ushort write_timeout, ushort read_timeout, int delay_between_sending)
         {
@@ -59,310 +44,212 @@ namespace Prizmer.Ports
             m_write_timeout = write_timeout;
             m_read_timeout = read_timeout;
             m_delay_between_sending = delay_between_sending;
-
-            dtCreated = DateTime.Now;
-            ReInitialize();
         }
 
-
-        public bool ReInitialize()
+        public void closePort()
         {
-            try
-            {
-                if (sender != null) sender.Close();
-
-                byte[] ipAddrLocalArr = { 192, 168, 0, 1 };
-                ipLocalAddr = new IPAddress(ipAddrLocalArr);
-
-                bool bRes = GetLocalEndPointIp(ref ipLocalAddr);
-                ipLocalEndpoint = new IPEndPoint(ipLocalAddr, GetFreeTcpPort());
-                remoteEndPoint = new IPEndPoint(IPAddress.Parse(m_address), (int)m_port);
-
-                sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                sender.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                LingerOption lingOpt = new LingerOption(true, 0);
-                sender.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, lingOpt);
-
-                sender.ReceiveTimeout = 800;
-                sender.SendTimeout = 400;
-
-                try
-                {
-                    //WriteToLog("IpLocalEndp: " + ipLocalEndpoint.ToString() + ";  Remote: " + remoteEndPoint.ToString() );
-
-                    sender.Bind(ipLocalEndpoint);
-                    sender.Connect(remoteEndPoint);
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    WriteToLog("При создании потока для tcp порта, порт не был инициализирован по причине: " + ex.Message);
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteToLog("TCP порт не инициализирован по причине: " + ex.Message);
-                return false;
-            }
+            return;
         }
 
-
-        bool GetTCPPortLiveMinutes(out int timeout)
-        {
-            timeout = 60;
-
-            string tmpValStr = "";
-            try
-            {
-                tmpValStr = ConfigurationManager.AppSettings.GetValues("tcpPortLiveMinutes")[0];
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-
-            bool parsingResult = false;
-            if (tmpValStr.Length > 0)
-                parsingResult = int.TryParse(tmpValStr, out timeout);
-
-            if (parsingResult)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        public void Write(byte[] m_cmd, int leng)
+        { 
+        
         }
 
-        int GetFreeTcpPort()
+        public int Read(ref byte[] data)
         {
-            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
-            l.Start();
-            int port = ((IPEndPoint)l.LocalEndpoint).Port;
-            l.Stop();
-            return port;
-        }
-        bool IsTcpPortFree(int tcpPort)
-        {
-            bool isAvailable = true;
-
-            // Evaluate current system tcp connections. This is the same information provided
-            // by the netstat command line application, just in .Net strongly-typed object
-            // form.  We will look through the list, and if our port we would like to use
-            // in our TcpClient is occupied, we will set isAvailable to false.
-            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-            TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
-
-            foreach (TcpConnectionInformation tcpi in tcpConnInfoArray)
-            {
-                if (tcpi.LocalEndPoint.Port == tcpPort)
-                {
-                    isAvailable = false;
-                    break;
-                }
-            }
-
-            return isAvailable;
+            return 0;
         }
 
-        string GetLocalIPAddress()
+        //Более прозрачная функция для тестовых целей
+        public int WriteReadData(byte[] out_buffer, ref byte[] in_buffer)
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    if (ip.ToString().StartsWith("192.168"))
-                        return ip.ToString();
-                }
-            }
-
-            return "192.168.0.1";
-        }
-        bool GetLocalEndPointIp(ref IPAddress localEndpointIp)
-        {
-            string strIpConfig = "";
-            try
-            {
-                strIpConfig = ConfigurationManager.AppSettings.GetValues("localEndPointIp")[0];
-            }
-            catch (Exception ex)
-            { }
-
-            bool parsingResult = false;
-            if (strIpConfig.Length > 0)
-                parsingResult = IPAddress.TryParse(strIpConfig, out localEndpointIp);
-
-            if (parsingResult)
-            {
-                return true;
-            }
-            else
-            {
-                strIpConfig = GetLocalIPAddress();
-                return parsingResult = IPAddress.TryParse(strIpConfig, out localEndpointIp);
-            }
-        }
-
-        public bool ManageUpWithReceivedBytes(List<byte> readBytesList, 
-            FindPacketSignature func,  int target_in_length,
-            out byte[] outDataArr, out int outReadingSize,
-            uint pos_count_data_size = 0, uint size_data = 0, uint header_size = 0)
-        {
-            outDataArr = new byte[readBytesList.Count];
-            outDataArr[0] = 0x0;
-            outReadingSize = 0;
-
-            //очередь для поддержки делегатов в старых драйверах
             Queue<byte> reading_queue = new Queue<byte>(8192);
 
-            int reading_size = 0;
+            // Соединяемся с удаленным устройством
+            IPAddress remIpAddr = IPAddress.Parse(this.m_address);
+            IPEndPoint ipEndPoint = new IPEndPoint(remIpAddr, this.m_port);
 
-            if (readBytesList.Count > 0)
+            Socket sender = new Socket(remIpAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            sender.ReceiveTimeout = this.m_read_timeout;
+            sender.SendTimeout = this.m_write_timeout;
+
+            // Соединяем сокет с удаленной точкой
+            sender.Connect(ipEndPoint);
+
+            // Отправляем данные через сокет
+            int bytesSent = sender.Send(out_buffer);
+            WriteToLog("Bytes sent: " + bytesSent);
+
+            Thread.Sleep(100);
+            uint elapsed_time_count = 0;
+
+            // чтение данных
+            while (elapsed_time_count < m_read_timeout)
             {
-                /*попытаемся определить начало полезных данных в буфере-на-вход
-                    при помощи связанного делегата*/
-                for (int i = 0; i < readBytesList.Count; i++)
-                    reading_queue.Enqueue(readBytesList[i]);
-
-                int pos = func(reading_queue);
-                if (pos >= 0)
+                if (sender.Available > 0)
                 {
-                    //избавимся от лишних данных спереди
-                    for (int i = 0; i < pos; i++)
-                        reading_queue.Dequeue();
-
-                    //оставшиеся данные преобразуем обратно в массив
-                    byte[] temp_buffer = new byte[reading_size = reading_queue.Count];
-
-                    temp_buffer = reading_queue.ToArray();
-                    //WriteToLog(BitConverter.ToString(temp_buffer));
-
-                    //если длина полезных данных ответа определена как 0, произведем расчет по необязательнм параметрам
-                    if (target_in_length == 0)
+                    try
                     {
-                        if (reading_size > pos_count_data_size)
-                            target_in_length = Convert.ToInt32(temp_buffer[pos_count_data_size] * size_data + header_size);
+                        byte[] tmp_buff = new byte[sender.Available];
+                        int readed_bytes = sender.Receive(tmp_buff);// tcp.Client.Receive(tmp_buff, 0, tmp_buff.Length, SocketFlags.None);
 
-                        outReadingSize = reading_size;
-                        return true;
+                        for (int i = 0; i < readed_bytes; i++)
+                        {
+                            reading_queue.Enqueue(tmp_buff[i]);
+                        }
                     }
-
-                    if (target_in_length == -1)
+                    catch (Exception ex)
                     {
-                            target_in_length = reading_queue.Count;
-                            reading_size = target_in_length;
-                            outDataArr = new byte[reading_size];
-
-                            for (int i = 0; i < outDataArr.Length; i++)
-                                outDataArr[i] = temp_buffer[i];
-
-                            outReadingSize = reading_size;
-                            return true;
-                    }
-
-                    if (target_in_length > 0 && reading_size >= target_in_length)
-                    {
-                        outDataArr = new byte[target_in_length];
-                        reading_size = target_in_length;
-                        for (int i = 0; i < target_in_length && i < outDataArr.Length; i++)
-                            outDataArr[i] = temp_buffer[i];
-
-                        outReadingSize = reading_size;
-                        return true;
+                        WriteToLog("Receive: " + ex.Message);
                     }
                 }
+                elapsed_time_count += 50;
+                Thread.Sleep(50);
             }
 
-            return false;
+
+            WriteToLog("Bytes received totally: " + reading_queue.Count);
+            in_buffer = reading_queue.ToArray();
+
+            // Освобождаем сокет
+            sender.Shutdown(SocketShutdown.Both);
+            sender.Close();
+            reading_queue.Clear();
+
+            return in_buffer.Length;
         }
 
         public int WriteReadData(FindPacketSignature func, byte[] out_buffer, ref byte[] in_buffer, int out_length, int target_in_length, uint pos_count_data_size = 0, uint size_data = 0, uint header_size = 0)
         {
-            TimeSpan ts = DateTime.Now - dtCreated;
-            int tcpAliveMinutes = 60;
-            GetTCPPortLiveMinutes(out tcpAliveMinutes);
-            if (ts.TotalMinutes >= tcpAliveMinutes)
+
+            //return WriteReadData(out_buffer, ref in_buffer);
+
+            int reading_size = 0;
+            using (TcpClient tcp = new TcpClient())
             {
-                //погружаемся в сон на 5 минут, чтобы "дать отдохнуть" принимающим устройствам
-                WriteToLog("WriteReadData: погружаемся в сон на 5 минут, чтобы дать отдохнуть принимающим устройствам");
-                if (sender != null && sender.Connected) sender.Close();
-                Thread.Sleep(1000 * 60 * 5);
-                dtCreated = DateTime.Now;
+                Queue<byte> reading_queue = new Queue<byte>(8192);
+                
 
-                ReInitialize();
-                WriteToLog("WriteReadData: открыт новый сокет после сна: " + sender.LocalEndPoint.ToString());
-            }
-
-            List<byte> readBytesList = new List<byte>(8192);
-            int readingSize = 0;
-
-            try
-            {
-                for (int i = 0; i < 2; i++)
+                try
                 {
-                    if (sender.Connected)
+                    Thread.Sleep(m_delay_between_sending);
+
+                    IAsyncResult ar = tcp.BeginConnect(m_address, m_port, null, null);
+                    using (WaitHandle wh = ar.AsyncWaitHandle)
                     {
-                        // Send the data through the socket.
-                        sender.Send(out_buffer, 0, out_length, SocketFlags.None);
-
-                        Thread.Sleep(10);
-                        uint elapsed_time_count = 100;
-
-                        while (elapsed_time_count <= m_read_timeout)
+                        if (!ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(10), false))
                         {
-                            if (sender.Available > 0)
+							throw new TimeoutException();
+                        }
+                        else
+                        {
+                            if (tcp.Client.Connected)
                             {
-                                try
-                                {
-                                    byte[] tmp_buff = new byte[sender.Available];
-                                    int readed_bytes = sender.Receive(tmp_buff);
+                                tcp.Client.ReceiveTimeout = m_read_timeout;
+                                tcp.Client.SendTimeout = m_write_timeout;
 
-                                    readBytesList.AddRange(tmp_buff);
-                                }
-                                catch (Exception ex)
+                                // посылка данных
+                                if (tcp.Client.Send(out_buffer, out_length, SocketFlags.None) == out_length)
                                 {
-                                    WriteToLog("WriteReadData: Read from port error: " + ex.Message);
+                                    uint elapsed_time_count = 0;
+
+                                    Thread.Sleep(50);
+
+                                    // чтение данных
+                                    while (elapsed_time_count < m_read_timeout)
+                                    {
+                                        if (tcp.Client.Available > 0)
+                                        {
+                                            try
+                                            {
+                                                byte[] tmp_buff = new byte[tcp.Available];
+                                                int readed_bytes = tcp.Client.Receive(tmp_buff, 0, tmp_buff.Length, SocketFlags.None);
+
+                                                for (int i = 0; i < readed_bytes; i++)
+                                                {
+                                                    reading_queue.Enqueue(tmp_buff[i]);
+                                                }
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                WriteToLog("Receive: " + ex.Message);
+                                            }
+                                        }
+                                        elapsed_time_count += 50;
+                                        Thread.Sleep(50);
+                                    }
+
+
+
+                                    int pos = -1;
+                                    if ((pos = func(reading_queue)) >= 0)
+                                    {
+                                        for (int i = 0; i < pos; i++)
+                                        {
+                                            reading_queue.Dequeue();
+                                        }
+
+                                        byte[] temp_buffer = new byte[reading_size = reading_queue.Count];
+                                        temp_buffer = reading_queue.ToArray();
+
+                                        if (target_in_length == 0)
+                                        {
+                                            if (reading_size > pos_count_data_size)
+                                            {
+                                                target_in_length = Convert.ToInt32(temp_buffer[pos_count_data_size] * size_data + header_size);
+                                            }
+                                        }
+
+                                        if (target_in_length > 0)
+                                        {
+                                            if (reading_size >= target_in_length)
+                                            {
+                                                reading_size = target_in_length;
+                                                for (int i = 0; i < target_in_length && i < in_buffer.Length; i++)
+                                                {
+                                                    in_buffer[i] = temp_buffer[i];
+                                                }
+                                            }
+                                        }
+
+                                        if (target_in_length == -1)
+                                        {
+                                            target_in_length = reading_queue.Count;
+                                            reading_size = target_in_length;
+                                            in_buffer = new byte[reading_size];
+
+                                            for (int i = 0; i < in_buffer.Length; i++)
+                                                in_buffer[i] = temp_buffer[i];
+
+                                            return reading_size;
+                                        }
+
+                                    }
                                 }
                             }
-
-                            elapsed_time_count += 100;
-                            Thread.Sleep(100);
                         }
-
-                        //WriteToLog("WriteReadData: before manageupWithBytes, readBytesList.Count: " + readBytesList.Count);
-
-                        bool bManageRes = ManageUpWithReceivedBytes(readBytesList, func, target_in_length, out in_buffer, out readingSize,
-                            pos_count_data_size, size_data, header_size);
-
-                        if (bManageRes) break;
-                    }
-                    else
-                    {
-                        if (i == 0)
-                            ReInitialize();
-                        else
-                            WriteToLog("WriteReadData: ошибка соединения");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                WriteToLog("WriteReadData: " + ex.Message);
-                return -1;
+                catch (Exception ex)
+                {
+                    WriteToLog(ex.Message);
+                    return -1;
+                }
+                finally
+                {
+                    reading_queue.Clear();
+                }
             }
 
-            return readingSize;
+            return reading_size;
         }
 
         public void WriteToLog(string str)
         {
             try
             {
-                using (StreamWriter sw = new StreamWriter(@"logs\tcp_ports.log", true, Encoding.Default))
+                using (StreamWriter sw = new StreamWriter(@"tcp_ports.txt", true, Encoding.Default))
                 {
                     sw.WriteLine(DateTime.Now.ToString() + ": " + GetName() + ": " + str);
                 }
@@ -372,15 +259,8 @@ namespace Prizmer.Ports
             }
         }
 
-        public string GetConnectionType()
-        {
-            return "tcp";
-        }
 
-        public bool GetLocalEndPoint(ref IPEndPoint localEp)
-        {
-            return false;
-        }
+
     }
 
     public sealed class ComPort : VirtualPort, IDisposable
@@ -398,6 +278,12 @@ namespace Prizmer.Ports
         public string GetName()
         {
             return m_name + " ";
+        }
+
+        public void closePort()
+        {
+            if (m_Port != null && m_Port.IsOpen)
+                m_Port.Close();
         }
 
         public ComPort(byte number, int baudrate, byte data_bits, byte parity, byte stop_bits, ushort write_timeout, ushort read_timeout, byte attemts)
@@ -451,9 +337,7 @@ namespace Prizmer.Ports
             }
             catch (Exception ex)
             {
-#if (DEBUG)
                 WriteToLog("Open " + m_name + ": " + ex.Message);
-#endif
                 return false;
             }
         }
@@ -733,6 +617,7 @@ namespace Prizmer.Ports
                             for (int i = 0; i < in_buffer.Length; i++)
                                 in_buffer[i] = temp_buffer[i];
 
+
                             ClosePort();
                             return reading_size;
                         }
@@ -769,23 +654,6 @@ namespace Prizmer.Ports
             catch
             {
             }
-        }
-
-
-        public string GetConnectionType()
-        {
-            return "com";
-        }
-
-        public bool ReInitialize()
-        {
-            return false;
-        }
-
-        public bool GetLocalEndPoint(ref IPEndPoint localEp)
-        {
-            localEp = null;
-            return false;
         }
     }
 }
