@@ -362,7 +362,7 @@ namespace Prizmer.Ports
         {
             try
             {
-                using (StreamWriter sw = new StreamWriter(@"logs\tcp_ports.log", true, Encoding.Default))
+                using (StreamWriter sw = new StreamWriter(@"tcp_ports.log", true, Encoding.Default))
                 {
                     sw.WriteLine(DateTime.Now.ToString() + ": " + GetName() + ": " + str);
                 }
