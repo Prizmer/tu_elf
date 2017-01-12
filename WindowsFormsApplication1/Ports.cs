@@ -333,7 +333,7 @@ namespace Prizmer.Ports
                             Thread.Sleep(100);
                         }
 
-                        //WriteToLog("WriteReadData: before manageupWithBytes, readBytesList.Count: " + readBytesList.Count);
+                        WriteToLog("WriteReadData: before manageupWithBytes, readBytesList.Count: " + readBytesList.Count);
 
                         bool bManageRes = ManageUpWithReceivedBytes(readBytesList, func, target_in_length, out in_buffer, out readingSize,
                             pos_count_data_size, size_data, header_size);

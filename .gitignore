@@ -2,3 +2,5 @@
 /WindowsFormsApplication1/bin/Release
 /WindowsFormsApplication1/bin/Debug/elflog.log
 /WindowsFormsApplication1/obj
+/WindowsFormsApplication1/bin/Debug/tcp_ports.log
+/WindowsFormsApplication1/bin/Debug/Эльф-тест.exe.config
