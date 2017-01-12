@@ -467,7 +467,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(63, 20);
             this.textBox2.TabIndex = 1;
-            this.textBox2.Text = "4002";
+            this.textBox2.Text = "2032";
             // 
             // textBox1
             // 
@@ -476,7 +476,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(147, 20);
             this.textBox1.TabIndex = 0;
-            this.textBox1.Text = "192.168.23.53";
+            this.textBox1.Text = "192.168.127.202";
             // 
             // panel1
             // 
