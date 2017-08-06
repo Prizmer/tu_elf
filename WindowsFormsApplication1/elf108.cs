@@ -1354,6 +1354,8 @@ namespace ElfApatorCommonDriver
                 int startInd = 1;
                 int valLength = 4;
 
+                WriteToLog(BitConverter.ToString(data_arr));
+
                 for (int i = 0; i < 4; i++)
                 {
                     byte[] tmpBArr = new byte[4];
@@ -1361,6 +1363,8 @@ namespace ElfApatorCommonDriver
                     int destIndex = i * valLength;
                     Array.Copy(data_arr, sourceIndex, tmpBArr, destIndex, valLength);
                     string tmpValStr = BitConverter.ToString(tmpBArr).Replace("-", "");
+
+                    WriteToLog(tmpValStr);
                     valuesArr[i] = float.Parse(tmpValStr) / 10;
                 }
             }
