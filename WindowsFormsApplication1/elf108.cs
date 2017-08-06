@@ -699,7 +699,9 @@ namespace ElfApatorCommonDriver
 
         public bool isControlByte(byte b)
         {
-            byte[] control_bytes = { 0x4d, 0x53, 0x6e, 0x16, 0x10, 0x68 };
+            //6.08.2017 - исключил байт отрицания 6e из массива, т.к. из-за этого
+            //не работает команда чтения цены импульса
+            byte[] control_bytes = { 0x4d, 0x53, 0x16, 0x10, 0x68 };
             if (Array.IndexOf(control_bytes, b) == -1)
             {
                 return false;
