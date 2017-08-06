@@ -1350,8 +1350,8 @@ namespace ElfApatorCommonDriver
 
             try
             {
-                //значения постоянной - 16 байт, начиная с 1го индекса (не с 0)
-                int startInd = 1;
+                //значения постоянной - 16 байт, начиная с 5го индекса (не с 0)
+                int startInd = 5;
                 int valLength = 4;
 
                 WriteToLog(BitConverter.ToString(data_arr));
