@@ -1360,7 +1360,7 @@ namespace ElfApatorCommonDriver
                 {
                     byte[] tmpBArr = new byte[4];
                     int sourceIndex = (i * valLength) + startInd;
-                    int destIndex = i * valLength;
+                    int destIndex = 0;
                     Array.Copy(data_arr, sourceIndex, tmpBArr, destIndex, valLength);
                     string tmpValStr = BitConverter.ToString(tmpBArr).Replace("-", "");
 
