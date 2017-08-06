@@ -540,7 +540,7 @@ namespace ElfApatorCommonDriver
 
         #region Протокол PT
 
-        public bool SendPT01_CMD(byte[] outCmdBytes, ref byte[] data_arr, byte[] outCmdDataBytes = null)
+        public bool SendPT01_CMD(byte[] outCmdBytes, ref byte[] data_arr, byte[] outCmdDataBytes = null, bool outCmdDataCrc = true)
         {
             List<byte> resCmdList = new List<byte>();
 
@@ -575,7 +575,7 @@ namespace ElfApatorCommonDriver
 
                 List<byte> cmdDataTmp = new List<byte>();
                 cmdDataTmp.AddRange(outCmdDataBytes);
-                cmdDataTmp.Add(crcd);
+                if (outCmdDataCrc) cmdDataTmp.Add(crcd);
 
                 encrCmdWCSList = new List<byte>(cmdDataTmp.Count);
                 EncryptByteArr(cmdDataTmp, ref encrCmdWCSList);
@@ -1244,29 +1244,69 @@ namespace ElfApatorCommonDriver
 
         public bool ChangeImpulseInputsValPrice(int inp1, int inp2)
         {
-            byte[] cmd = { m_addr, 0x2b, 0x35, 0x00 };
+            //зарезервированы на будущее
+            int inp3 = 1, inp4 = 1;
+
             byte[] input1ValueBytes = BitConverter.GetBytes(inp1);
             byte[] input2ValueBytes = BitConverter.GetBytes(inp2);
+
             byte[] i1_4BArr = new byte[4];
             byte[] i2_4BArr = new byte[4];
+            byte[] i3_4BArr = new byte[4];
+            byte[] i4_4BArr = new byte[4]; // { 00, 00, 00, 10 } - умолчание соответствует значению 1 l/imp
 
-            for (int i = 0; i < input1ValueBytes.Length; i++)
-                i1_4BArr[i] = input1ValueBytes[i];
-            for (int i = 0; i < input2ValueBytes.Length; i++)
-                i2_4BArr[i] = input2ValueBytes[i];
+            byte[] empty_4BArr = { 0, 0, 0, 0 };
 
-            byte[] cmd_data = { 
-                0x01, 0x0, 0x0, 0x01,
-                0x00, 0x0, 0x0, 0x01,
-                0x00, 0x0, 0x0, 0x01,
-                0x00, 0x0, 0x0, 0x01,
-                0x00, 0x0, 0x0, 0x00,
+            ToBcd(inp1 * 10, ref i1_4BArr);
+            ToBcd(inp2 * 10, ref i2_4BArr);
+            ToBcd(inp3 * 10, ref i3_4BArr);
+            ToBcd(inp4 * 10, ref i3_4BArr);
+
+
+            byte[] i1_val = BitConverter.GetBytes((int)inp1);
+            byte[] i2_val = BitConverter.GetBytes((int)inp2);
+            byte[] i3_val = BitConverter.GetBytes((int)inp3);
+            byte[] i4_val = BitConverter.GetBytes((int)inp4);
+
+            Array.Reverse(i1_val);
+            Array.Reverse(i2_val);
+            Array.Reverse(i3_val);
+            Array.Reverse(i4_val);
+
+            byte[] cmd_data = {
+                0x01, 
+
+                //постоянная
                 i1_4BArr[0], i1_4BArr[1], i1_4BArr[2], i1_4BArr[3], 
                 i2_4BArr[0], i2_4BArr[1], i2_4BArr[2], i2_4BArr[3],
-                                0x00, 0x0, 0x0, 0x01,
-                                                0x00, 0x0, 0x0, 0x01,
-                0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0
+                i3_4BArr[0], i3_4BArr[1], i3_4BArr[2], i3_4BArr[3],
+                i3_4BArr[0], i3_4BArr[1], i3_4BArr[2], i3_4BArr[3],
+
+                //величина,  в случае если l/imp - равна постоянной
+                i1_val[0], i1_val[1], i1_val[2], i1_val[3],
+                i2_val[0], i2_val[1], i2_val[2], i2_val[3],
+                i3_val[0], i3_val[1], i3_val[2], i3_val[3],
+                i4_val[0], i4_val[1], i4_val[2], i4_val[3],
+
+                //R величина - в случае если l/imp - везде 0
+                empty_4BArr[0], empty_4BArr[1], empty_4BArr[2], empty_4BArr[3],
+                empty_4BArr[0], empty_4BArr[1], empty_4BArr[2], empty_4BArr[3],
+                empty_4BArr[0], empty_4BArr[1], empty_4BArr[2], empty_4BArr[3],
+                empty_4BArr[0], empty_4BArr[1], empty_4BArr[2], empty_4BArr[3],           
+
+                //тип импульса - по всем 4м каналам - m3 (l/imp)
+                0x0, 0x0, 0x0, 0x0 
            };
+
+          //  byte crcCmdData = CRC8(cmd_data, cmd_data.Length);
+          //  List<byte> cmdDataList = new List<byte>();
+         //   cmdDataList.AddRange(cmd_data);
+          //  cmdDataList.Add(crcCmdData);
+
+
+
+            byte[] cmd = { m_addr, 0x2b, 0x35, 0x00 };
+
 
             byte[] data_arr = new byte[1];
             if (!SendPT01_CMD(cmd, ref data_arr, cmd_data)) return false;
@@ -1281,6 +1321,31 @@ namespace ElfApatorCommonDriver
             return true;
         }
 
+        public bool ReadImpulseInputsValPrice(ref string result)
+        {
+
+            byte[] cmd = { m_addr, 0x2c, 0x01, 0x00 };
+            byte[] cmd_data = {
+                0x01,
+                0x46,
+                0xA1
+            };
+
+
+            byte[] data_arr = new byte[1];
+            if (!SendPT01_CMD(cmd, ref data_arr, cmd_data, false)) return false;
+
+            byte crc_check = CRC8(data_arr, data_arr.Length);
+            if (crc_check != 0x0)
+            {
+                WriteToLog("ReadLastArchiveVal: данные приняты неверно");
+                return false;
+            }
+
+            result = Convert.ToString(data_arr);
+
+            return true;
+        }
 
         public bool ReadArchiveLastVal(ref ArchiveValue archVal)
         {

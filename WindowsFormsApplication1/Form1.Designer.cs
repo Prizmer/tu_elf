@@ -87,6 +87,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.btnWriteImpInpVal = new System.Windows.Forms.Button();
+            this.btnCheckImpPrice = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.apatorBtn)).BeginInit();
@@ -690,6 +691,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.btnCheckImpPrice);
             this.groupBox5.Controls.Add(this.btnWriteInpulsePrise);
             this.groupBox5.Controls.Add(this.label10);
             this.groupBox5.Controls.Add(this.label9);
@@ -698,14 +700,13 @@
             this.groupBox5.Controls.Add(this.btnWriteImpInpVal);
             this.groupBox5.Location = new System.Drawing.Point(633, 153);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(253, 77);
+            this.groupBox5.Size = new System.Drawing.Size(253, 110);
             this.groupBox5.TabIndex = 40;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Предустановка значений имп. входов";
             // 
             // btnWriteInpulsePrise
             // 
-            this.btnWriteInpulsePrise.Enabled = false;
             this.btnWriteInpulsePrise.Location = new System.Drawing.Point(131, 44);
             this.btnWriteInpulsePrise.Name = "btnWriteInpulsePrise";
             this.btnWriteInpulsePrise.Size = new System.Drawing.Size(116, 25);
@@ -763,6 +764,16 @@
             this.btnWriteImpInpVal.Text = "Записать значение";
             this.btnWriteImpInpVal.UseVisualStyleBackColor = true;
             this.btnWriteImpInpVal.Click += new System.EventHandler(this.btnWriteImpInpVal_Click);
+            // 
+            // btnCheckImpPrice
+            // 
+            this.btnCheckImpPrice.Location = new System.Drawing.Point(131, 75);
+            this.btnCheckImpPrice.Name = "btnCheckImpPrice";
+            this.btnCheckImpPrice.Size = new System.Drawing.Size(116, 25);
+            this.btnCheckImpPrice.TabIndex = 46;
+            this.btnCheckImpPrice.Text = "Проверка ЦИ";
+            this.btnCheckImpPrice.UseVisualStyleBackColor = true;
+            this.btnCheckImpPrice.Click += new System.EventHandler(this.btnCheckImpPrice_Click);
             // 
             // Form1
             // 
@@ -876,6 +887,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Button btnCheckImpPrice;
     }
 }
 

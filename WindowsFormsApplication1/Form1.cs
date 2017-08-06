@@ -476,5 +476,16 @@ namespace WindowsFormsApplication1
             }
         }
 
+        private void btnCheckImpPrice_Click(object sender, EventArgs e)
+        {
+            clearScreen();
+            addMessageToScreen("*** Цена импульсов ***");
+            addMessageToScreen("");
+            string res = "Не удалось прочитать цену импульсов";
+
+            Meter.ReadImpulseInputsValPrice(ref res);
+            addMessageToScreen(res);
+            
+        }
     }
 }
