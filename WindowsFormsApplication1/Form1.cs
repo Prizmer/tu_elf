@@ -483,9 +483,19 @@ namespace WindowsFormsApplication1
             addMessageToScreen("");
             string res = "Не удалось прочитать цену импульсов";
 
-            Meter.ReadImpulseInputsValPrice(ref res);
-            addMessageToScreen(res);
-            
+            float[] valuesArr;
+            byte[] resultArr;
+            if (Meter.ReadImpulseInputsValPrice(out valuesArr, out resultArr))
+            {
+                for (int i = 0; i < valuesArr.Length; i++)
+                {
+                    res = "Inp " + (i + 1) + ": " + valuesArr[i] + " l/imp;";
+                    addMessageToScreen(res);
+                }
+            } else
+            {
+                addMessageToScreen(res);
+            }
         }
     }
 }

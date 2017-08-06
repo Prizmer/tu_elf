@@ -1323,8 +1323,11 @@ namespace ElfApatorCommonDriver
             return true;
         }
 
-        public bool ReadImpulseInputsValPrice(ref string result)
+        public bool ReadImpulseInputsValPrice(out float[] valuesArr, out byte[] resultArr)
         {
+
+            valuesArr = new float[4] { 0, 0, 0, 0};
+            resultArr = new byte[1] { 0x0 };
 
             byte[] cmd = { m_addr, 0x2c, 0x01, 0x00 };
             byte[] cmd_data = {
@@ -1336,6 +1339,7 @@ namespace ElfApatorCommonDriver
 
             byte[] data_arr = new byte[1];
             if (!SendPT01_CMD(cmd, ref data_arr, cmd_data, false)) return false;
+            resultArr = data_arr;
 
             byte crc_check = CRC8(data_arr, data_arr.Length);
             if (crc_check != 0x0)
@@ -1344,7 +1348,27 @@ namespace ElfApatorCommonDriver
                 return false;
             }
 
-            result = Convert.ToString(data_arr);
+            try
+            {
+                //значения постоянной - 16 байт, начиная с 1го индекса (не с 0)
+                int startInd = 1;
+                int valLength = 4;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    byte[] tmpBArr = new byte[4];
+                    int sourceIndex = (i * valLength) + startInd;
+                    int destIndex = i * valLength;
+                    Array.Copy(data_arr, sourceIndex, tmpBArr, destIndex, valLength);
+                    string tmpValStr = BitConverter.ToString(tmpBArr).Replace("-", "");
+                    valuesArr[i] = float.Parse(tmpValStr) / 10;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteToLog("ReadLastArchiveVal: не удалось преобразовать значения: " + ex.Message);
+                return false;
+            }
 
             return true;
         }
