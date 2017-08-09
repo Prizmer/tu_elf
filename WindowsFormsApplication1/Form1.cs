@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Threading;
-using System.IO;
 using System.IO.Ports;
 
-using System.Collections;
-using Prizmer.Ports;
-using Prizmer.Meters;
-
-using ElfApatorCommonDriver;
+using Drivers.LibMeter;
+using Drivers.ElfApatorDriver;
+using PollingLibraries.LibPorts;
 
 namespace WindowsFormsApplication1
 {
@@ -43,7 +34,7 @@ namespace WindowsFormsApplication1
             addressDecCmb.Items.AddRange(addrLstDec.ToArray());
 
             //экземпляр драйвера
-            Meter = new elf108();
+            Meter = new ElfApatorDriver();
 
             portCmbBox.SelectedIndex = 0;
             addressCmbBox.SelectedIndex = 0;
@@ -58,7 +49,7 @@ namespace WindowsFormsApplication1
 
         }
 
-        elf108 Meter;
+        ElfApatorDriver Meter;
         VirtualPort vp;
         byte m_addr;
 
@@ -189,7 +180,7 @@ namespace WindowsFormsApplication1
             addMessageToScreen("-----------------------");
 
             //default settings
-            ArchiveValue av = new ArchiveValue();
+            Drivers.ElfApatorDriver.ArchiveValue av = new Drivers.ElfApatorDriver.ArchiveValue();
             av.id = -1;
             av.dt = new DateTime();
             av.energy = -1;
@@ -215,7 +206,7 @@ namespace WindowsFormsApplication1
             addMessageToScreen("Чтение последней записи");
             addMessageToScreen("-----------------------");
             //default settings
-            ArchiveValue av = new ArchiveValue();
+            Drivers.ElfApatorDriver.ArchiveValue av = new Drivers.ElfApatorDriver.ArchiveValue();
             av.id = -1;
             av.dt = new DateTime();
             av.energy = -1;

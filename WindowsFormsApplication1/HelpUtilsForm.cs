@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using ElfApatorCommonDriver;
+using Drivers.ElfApatorDriver;
 
 namespace WindowsFormsApplication1
 {
@@ -92,7 +92,7 @@ namespace WindowsFormsApplication1
             }
         }
 
-        elf108 elfDriver = new elf108();
+        ElfApatorDriver elfDriver = new ElfApatorDriver();
         private void HelpUtilsForm_Load(object sender, EventArgs e)
         {
 
