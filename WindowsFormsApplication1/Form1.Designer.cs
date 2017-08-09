@@ -82,12 +82,12 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btnCheckImpPrice = new System.Windows.Forms.Button();
             this.btnWriteInpulsePrise = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.btnWriteImpInpVal = new System.Windows.Forms.Button();
-            this.btnCheckImpPrice = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.apatorBtn)).BeginInit();
@@ -468,7 +468,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(63, 20);
             this.textBox2.TabIndex = 1;
-            this.textBox2.Text = "2032";
+            this.textBox2.Text = "2001";
             // 
             // textBox1
             // 
@@ -477,7 +477,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(147, 20);
             this.textBox1.TabIndex = 0;
-            this.textBox1.Text = "192.168.127.203";
+            this.textBox1.Text = "192.168.23.54";
             // 
             // panel1
             // 
@@ -705,6 +705,16 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Предустановка значений имп. входов";
             // 
+            // btnCheckImpPrice
+            // 
+            this.btnCheckImpPrice.Location = new System.Drawing.Point(131, 75);
+            this.btnCheckImpPrice.Name = "btnCheckImpPrice";
+            this.btnCheckImpPrice.Size = new System.Drawing.Size(116, 25);
+            this.btnCheckImpPrice.TabIndex = 46;
+            this.btnCheckImpPrice.Text = "Проверка ЦИ";
+            this.btnCheckImpPrice.UseVisualStyleBackColor = true;
+            this.btnCheckImpPrice.Click += new System.EventHandler(this.btnCheckImpPrice_Click);
+            // 
             // btnWriteInpulsePrise
             // 
             this.btnWriteInpulsePrise.Location = new System.Drawing.Point(131, 44);
@@ -764,16 +774,6 @@
             this.btnWriteImpInpVal.Text = "Записать значение";
             this.btnWriteImpInpVal.UseVisualStyleBackColor = true;
             this.btnWriteImpInpVal.Click += new System.EventHandler(this.btnWriteImpInpVal_Click);
-            // 
-            // btnCheckImpPrice
-            // 
-            this.btnCheckImpPrice.Location = new System.Drawing.Point(131, 75);
-            this.btnCheckImpPrice.Name = "btnCheckImpPrice";
-            this.btnCheckImpPrice.Size = new System.Drawing.Size(116, 25);
-            this.btnCheckImpPrice.TabIndex = 46;
-            this.btnCheckImpPrice.Text = "Проверка ЦИ";
-            this.btnCheckImpPrice.UseVisualStyleBackColor = true;
-            this.btnCheckImpPrice.Click += new System.EventHandler(this.btnCheckImpPrice_Click);
             // 
             // Form1
             // 

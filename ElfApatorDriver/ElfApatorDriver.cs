@@ -212,10 +212,15 @@ namespace Drivers.ElfApatorDriver
                     }
                 case Params.ENERGY:
                     {
-                        //коэффициент, согласно документации MBUS, после применения дает значение в KCal
-                        COEFFICIENT = 10;
-                        //однако, согласно документации elf, требуется представить в GCal
-                        COEFFICIENT *= (int)Math.Pow(10, 6);
+                        ////коэффициент, согласно документации MBUS, после применения дает значение в KCal
+                        //COEFFICIENT = 10;
+                        ////однако, согласно документации elf, требуется представить в GCal
+                        //COEFFICIENT *= (int)Math.Pow(10, 6);
+
+                        //согласно письму, которое прислал Женя 08.08.17
+                        //делим значение энергии на 
+                        COEFFICIENT *= (int)Math.Pow(10, 5);
+
                         break;
                     }
                 case Params.POWER:

@@ -116,7 +116,7 @@ namespace WindowsFormsApplication1
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string about = "ООО \"ПРИЗМЕР\"\nМосква 2015 г.";
+            string about = "ООО \"ПРИЗМЕР\"\nМосква 2017 г.";
             MessageBox.Show(about, "О программе", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
