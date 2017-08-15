@@ -1505,6 +1505,9 @@ namespace Drivers.ElfApatorDriver
         /// <returns></returns>
         public bool ReadDailyValues(DateTime dt, ushort param, ushort tarif, ref float recordValue)
         {
+            //TODO: наладить родное чтение суточных параметров
+            return ReadCurrentValues(param, tarif, ref recordValue);
+
             ArchiveValue resArchVal = new ArchiveValue();
             ArchiveValue lastArchiveVal = new ArchiveValue();
             lastArchiveVal.id = -1;
