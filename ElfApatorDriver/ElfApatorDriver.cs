@@ -307,13 +307,13 @@ namespace Drivers.ElfApatorDriver
             List<byte> answerBytes = new List<byte>();
             if (!SendREQ_UD2(out answerBytes) || answerBytes.Count == 0)
             {
-                WriteToLog("ReadSerialNumber: не получены байты ответа");
+                WriteToLog("GetRecordsList: не получены байты ответа");
                 return false;
             }
 
             if (!SplitRecords(answerBytes, ref records) || records.Count == 0)
             {
-                WriteToLog("ReadSerialNumber: не удалось разделить запись");
+                WriteToLog("GetRecordsList: не удалось разделить запись");
                 return false;
             }
 
@@ -342,72 +342,80 @@ namespace Drivers.ElfApatorDriver
             //переберем записи
             while (!doStop)
             {
-                Record tmpRec = new Record();
-                tmpRec.DIFEs = new List<byte>();
-                tmpRec.VIFEs = new List<byte>();
-                tmpRec.dataBytes = new List<byte>();
-
-                tmpRec.DIF = recordsBytes[index];
-
-                //определим длину и тип данных
-                int dataLength = getLengthAndTypeFromDIF(tmpRec.DIF, out tmpRec.recordType);
-
-                if (hasExtension(tmpRec.DIF))
+                try
                 {
-                    //переход к байту DIFE
-                    index++;
-                    byte DIFE = recordsBytes[index];
-                    tmpRec.DIFEs.Add(DIFE);
+                    Record tmpRec = new Record();
+                    tmpRec.DIFEs = new List<byte>();
+                    tmpRec.VIFEs = new List<byte>();
+                    tmpRec.dataBytes = new List<byte>();
 
-                    while (hasExtension(DIFE))
+                    tmpRec.DIF = recordsBytes[index];
+
+                    //определим длину и тип данных
+                    int dataLength = getLengthAndTypeFromDIF(tmpRec.DIF, out tmpRec.recordType);
+
+                    if (hasExtension(tmpRec.DIF))
                     {
-                        //перейдем к следующему DIFE
+                        //переход к байту DIFE
                         index++;
-                        DIFE = recordsBytes[index];
+                        byte DIFE = recordsBytes[index];
                         tmpRec.DIFEs.Add(DIFE);
+
+                        while (hasExtension(DIFE))
+                        {
+                            //перейдем к следующему DIFE
+                            index++;
+                            DIFE = recordsBytes[index];
+                            tmpRec.DIFEs.Add(DIFE);
+                        }
                     }
-                }
 
-                //переход к VIF
-                index++;
-                tmpRec.VIF = recordsBytes[index];
-
-                //проверим на наличие специального VIF, после которого следует ASCII строка
-                if (tmpRec.VIF == Convert.ToByte("11111100", 2))
-                {
+                    //переход к VIF
                     index++;
-                    int str_length = recordsBytes[index];
-                    index += str_length;
-                }
+                    tmpRec.VIF = recordsBytes[index];
 
-                if (hasExtension(tmpRec.VIF))
-                {
-                    //переход к VIFE
-                    index++;
-                    byte VIFE = recordsBytes[index];
-                    tmpRec.VIFEs.Add(VIFE);
-
-                    while (hasExtension(VIFE))
+                    //проверим на наличие специального VIF, после которого следует ASCII строка
+                    if (tmpRec.VIF == Convert.ToByte("11111100", 2))
                     {
-                        //перейдем к следующему VIFE
                         index++;
-                        VIFE = recordsBytes[index];
-                        tmpRec.VIFEs.Add(VIFE);
+                        int str_length = recordsBytes[index];
+                        index += str_length;
                     }
-                }
 
-                //переход к первому байту данных
-                index++;
-                int dataCnt = 0;
-                while (dataCnt < dataLength)
-                {
-                    tmpRec.dataBytes.Add(recordsBytes[index]);
+                    if (hasExtension(tmpRec.VIF))
+                    {
+                        //переход к VIFE
+                        index++;
+                        byte VIFE = recordsBytes[index];
+                        tmpRec.VIFEs.Add(VIFE);
+
+                        while (hasExtension(VIFE))
+                        {
+                            //перейдем к следующему VIFE
+                            index++;
+                            VIFE = recordsBytes[index];
+                            tmpRec.VIFEs.Add(VIFE);
+                        }
+                    }
+
+                    //переход к первому байту данных
                     index++;
-                    dataCnt++;
-                }
+                    int dataCnt = 0;
+                    while (dataCnt < dataLength)
+                    {
+                        tmpRec.dataBytes.Add(recordsBytes[index]);
+                        index++;
+                        dataCnt++;
+                    }
 
-                recordsList.Add(tmpRec);
-                if (index >= recordsBytes.Count - 1) doStop = true;
+                    recordsList.Add(tmpRec);
+                    if (index >= recordsBytes.Count - 1) doStop = true;
+
+                }
+                catch (Exception ex)
+                {
+                    WriteToLog("SplitRecords: возникло исключение: " + ex);
+                }
             }
 
             return true;
