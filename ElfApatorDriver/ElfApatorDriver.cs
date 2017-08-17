@@ -415,6 +415,7 @@ namespace Drivers.ElfApatorDriver
                 catch (Exception ex)
                 {
                     WriteToLog("SplitRecords: возникло исключение: " + ex);
+                    return false;
                 }
             }
 
