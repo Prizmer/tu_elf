@@ -1011,12 +1011,13 @@ namespace Drivers.ElfApatorDriver
                 }
 
                 if (inp[inp.Length - 1] == 0xE5)
-                {
+                { 
                     return true;
                 }
                 else
-                {
-                    WriteToLog("В ответе SND_NKE не найден подтверждающий байт 0xE5");
+                {              
+                    WriteToLog("В ответе SND_NKE не найден подтверждающий байт 0xE5: ");
+                    WriteToLog(BitConverter.ToString(inp));
                     return false;
                 }
 
