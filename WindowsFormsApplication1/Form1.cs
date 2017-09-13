@@ -76,6 +76,7 @@ namespace WindowsFormsApplication1
             cps.read_timeout = (ushort)numericUpDown4.Value;
             cps.write_timeout = 0;
             cps.attempts = 1;
+            
             vp = new ComPort(cps);
         }
 
