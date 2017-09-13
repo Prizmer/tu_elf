@@ -66,8 +66,17 @@ namespace WindowsFormsApplication1
             m_Port.DtrEnable = true;
             m_Port.RtsEnable = true;
              * */
-
-            vp = new ComPort(byte.Parse(portName.Remove(0, 3)), 2400, 8, 2, 1, 0, (ushort)numericUpDown4.Value, 1);
+            ComPortSettings cps = new ComPortSettings();
+            cps.name = portName.Remove(0, 3);
+            cps.baudrate = 2400;
+            cps.data_bits = 8;
+            cps.parity = 2;
+            cps.stop_bits = 1;
+            cps.gsm_on = false;
+            cps.read_timeout = (ushort)numericUpDown4.Value;
+            cps.write_timeout = 0;
+            cps.attempts = 1;
+            vp = new ComPort(cps);
         }
 
         private void initTCPIP(string addr, string port)
